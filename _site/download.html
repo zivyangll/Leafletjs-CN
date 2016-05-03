@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+	<title>Download - Leaflet - a JavaScript library for interactive maps</title>
+
+	<meta charset="utf-8" />
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+
+	<link rel="shortcut icon" type="image/x-icon" href="../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="../docs/css/normalize.css" />
+	<link rel="stylesheet" href="../docs/css/main.css" />
+
+	<script src="../docs/highlight/highlight.pack.js"></script>
+	<link rel="stylesheet" href="../docs/highlight/styles/github-gist.css" />
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	
+
+	<script>
+		ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+	</script>
+</head>
+<body class="download-page">
+
+<h1><a href="http://leafletjs.com"><img src="../docs/images/logo.png" alt="Leaflet" width="300" /></a></h1>
+<h3 class="tagline">开源JavaScript WebGIS库<br>移动友好，交互性强</h3>
+
+<ul class="nav">
+	<li>
+		
+			<a href="../index.html">概述</a>
+		
+	</li>
+	<li>
+		
+			<a href="../examples.html">教程</a>
+		
+	</li>
+	<li>
+		
+			<a href="../reference.html">文档</a>
+		
+	</li>
+	<li>
+		
+			<span>下载</span>
+		
+	</li>
+	<li>
+		
+			<a href="../plugins.html">插件</a>
+		
+	</li>
+	<li>
+		
+			<a href="../blog.html">中文社区</a>
+		
+	</li>
+</ul>
+
+<div class="container">
+
+
+<h2 id="leaflet">下载Leaflet</h2>
+
+<table>
+	<tr>
+		<th>版本</th>
+		<th>描述</th>
+	</tr>
+	<tr>
+		<td class="width100"><a href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.zip">Leaflet 0.7.7</a></td>
+		<td>稳定版，发布在2013年11月18日，最新更新在2015年10月26日。</td>
+	</tr>
+	<tr>
+		<td><a href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.zip">Leaflet 1.0.0-rc1</a></td>
+		<td>最新的1.0候选版本，发布在2016年4月18日。</td>
+	</tr>
+	<tr>
+		<td><a href="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.zip">Leaflet 1.0-dev</a></td>
+		<td>开发中的版本，开发在 <code>master</code> 分支上.</td>
+	</tr>
+</table>
+
+<p><a href="https://github.com/Leaflet/Leaflet/blob/master/CHANGELOG.md">查看版本历史</a></p>
+
+<p>注意：master版本可能包括一些不兼容旧版本的变化，请在更新版本之前仔细阅读更新文档。</p>
+
+<h3 id="leaflet-1">使用在线的Leaflet版本</h3>
+
+<p>最新的版本版本发布在CDN上 &mdash; 把下面代码放到HTML文件的&lt;head&gt;标签中即可：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /&gt;
+&lt;script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"&gt;&lt;/script&gt;
+</code></pre>
+</div>
+
+<p>或者</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.css" /&gt;
+&lt;script src="http://cdn.leafletjs.com/leaflet/v1.0.0-rc.1/leaflet.js"&gt;&lt;/script&gt;
+</code></pre>
+</div>
+
+<h3 id="leaflet-2">使用离线下载的Leaflet版本</h3>
+
+<p>将代码下载下来，你将看到下面四个文件：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">leaflet.js</code> - 经过压缩的JavaScript代码。</li>
+  <li><code class="highlighter-rouge">leaflet-src.js</code> - 未经过压缩的，用于调试和阅读的代码。</li>
+  <li><code class="highlighter-rouge">leaflet.css</code> - Leaflet的样式文件。</li>
+  <li><code class="highlighter-rouge">images</code> - 包括了<code class="highlighter-rouge">leaflet.css</code>中引用的文件. 它必须与 <code class="highlighter-rouge">leaflet.css</code> 在同一个目录下.</li>
+</ul>
+
+<p>下载并解压到网站的根目录，并在&lt;head&gt;标签中添加以下HTML代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;link rel="stylesheet" href="/path/to/leaflet.css" /&gt;
+&lt;script src="/path/to/leaflet.js"&gt;&lt;/script&gt; &lt;!-- 或者使用 leaflet-src.js --!&gt;
+</code></pre>
+</div>
+
+<h3 id="leaflet-3">Leaflet源码</h3>
+
+<p>上面下载的文件只包括Leaflet库本身，如果你想下载完整的源码：包括单元测试，调试文件，构建脚本等，你可以在 <a href="https://github.com/Leaflet/Leaflet">GitHub仓库</a><a href="https://github.com/Leaflet/Leaflet/releases">下载它</a>。</p>
+
+<h3 id="leaflet-4">从源码编译Leaflet</h3>
+
+<p>Leaflet构建系统由<a href="http://nodejs.org">Node.js</a>驱动，NodeJS在大多数系统中都很容易安装和使用。下面是安装步骤：</p>
+
+<ol>
+  <li><a href="http://nodejs.org">下载和安装Node</a></li>
+  <li>在命令行中运行以下命令：</li>
+</ol>
+
+<pre><code>npm install -g jake
+npm install</code></pre>
+
+<p>当安装结束后，在Leaflet根目录下运行 <code class="highlighter-rouge">jake build</code>，这将合并和压缩Leaflet源码， 并保存在 <code class="highlighter-rouge">dist</code> 目录中。</p>
+
+<h3 id="leaflef">构建一个自定义的Leaflef版本</h3>
+
+<p>构建一个自定义的库，你只需要做一件事：打开Leaflet源码中的 <code class="highlighter-rouge">build/build.html</code> 页面，选择组件（它将自动计算依赖），并在命令行中生成它。</p>
+
+
+<div class="footer">
+	<p>&copy; 翻译 <a href="http://www.yanglonglong.com">杨龙龙</a>. &copy; <a href="http://leafletjs.com/"> Leaflet </a> 官方网站.</p>
+</div>
+
+</div>
+
+<nav class="ext-links">
+  <a class="ext-link twitter" href="http://twitter.com/LeafletJS" title="Follow LeafletJS on Twitter"><img alt="Follow LeafletJS on Twitter" src="../docs/images/twitter-round.png" width="46" /></a>
+  <a class="ext-link github" href="http://github.com/Leaflet/Leaflet" title="View Source on GitHub"><img alt="View Source on GitHub" src="../docs/images/github-round.png" width="46" /></a>
+  <a class="ext-link forum" href="https://stackoverflow.com/questions/tagged/leaflet" title="Ask for help on Stack Overflow"><img alt="Leaflet questions on Stack Overflow" src="../docs/images/forum-round.png" width="46" /></a>
+
+</nav>
+
+<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlighting();
+
+	(function () {
+		if (document.body.className.indexOf('api-page') !== -1) {
+			var headers = document.getElementsByTagName('h2');
+
+			for (var i = 0, len = headers.length; i < len; i++) {
+				if (headers[i].id) {
+					headers[i].onclick = function(e) {
+						if (e.offsetX < 0) {
+							window.location.hash = '#' + this.id;
+						}
+					};
+				}
+			}
+		}
+	})();
+</script>
+
+<script>
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-4147697-4' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<script type="text/javascript" src="../docs/js/docs.js"></script>
+</body>
+</html>

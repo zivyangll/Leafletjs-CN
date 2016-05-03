@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>WMS example - Leaflet</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	<style>
+		#map {
+			width:600px;
+			height: 400px;
+		}
+	</style>
+	
+</head>
+<body>
+
+<div id='map'></div>
+
+<script type="text/javascript">
+
+	var map = L.map('map', {
+		center: [-17, -67],
+		zoom: 3
+	});
+
+	var basemaps = {
+		Countries: L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+			layers: 'ne:ne_10m_admin_0_countries'
+		}),
+
+		Boundaries: L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+			layers: 'ne:ne_10m_admin_0_boundary_lines_land'
+		}),
+
+		'Countries, then boundaries': L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+			layers: 'ne:ne_10m_admin_0_countries,ne:ne_10m_admin_0_boundary_lines_land'
+		}),
+
+		'Boundaries, then countries': L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+			layers: 'ne:ne_10m_admin_0_boundary_lines_land,ne:ne_10m_admin_0_countries'
+		})
+	};
+
+	L.control.layers(basemaps, {}, {collapsed: false}).addTo(map);
+
+	basemaps.Countries.addTo(map);
+
+</script>
+
+
+
+</body>
+</html>

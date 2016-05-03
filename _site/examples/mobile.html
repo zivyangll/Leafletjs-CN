@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+	<title>Leaflet on Mobile - Leaflet - a JavaScript library for interactive maps</title>
+
+	<meta charset="utf-8" />
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+
+	<link rel="shortcut icon" type="image/x-icon" href="../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="../docs/css/normalize.css" />
+	<link rel="stylesheet" href="../docs/css/main.css" />
+
+	<script src="../docs/highlight/highlight.pack.js"></script>
+	<link rel="stylesheet" href="../docs/highlight/styles/github-gist.css" />
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	
+
+	<script>
+		ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+	</script>
+</head>
+<body>
+
+<h1><a href="http://leafletjs.com"><img src="../docs/images/logo.png" alt="Leaflet" width="300" /></a></h1>
+<h3 class="tagline">开源JavaScript WebGIS库<br>移动友好，交互性强</h3>
+
+<ul class="nav">
+	<li>
+		
+			<a href="../index.html">概述</a>
+		
+	</li>
+	<li>
+		
+			<a href="../examples.html">教程</a>
+		
+	</li>
+	<li>
+		
+			<a href="../reference.html">文档</a>
+		
+	</li>
+	<li>
+		
+			<a href="../download.html">下载</a>
+		
+	</li>
+	<li>
+		
+			<a href="../plugins.html">插件</a>
+		
+	</li>
+	<li>
+		
+			<a href="../blog.html">中文社区</a>
+		
+	</li>
+</ul>
+
+<div class="container">
+
+
+<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+
+<h2 id="leaflet-on-mobile">Leaflet on Mobile</h2>
+
+<p>In this example, you&#8217;ll learn how to create a fullscreen map tuned for mobile devices like iPhone, iPad or Android phones, and how to easily detect and use the current user location.</p>
+
+<p><a href="mobile-example.html">View example in fullscreen &rarr;</a></p>
+
+<h3 id="preparing-the-page">Preparing the page</h3>
+
+<p>First we&#8217;ll take a look at the HTML &amp; CSS code of the page. To make our map <code class="highlighter-rouge">div</code> element stretch to all available space (fullscreen), we can use the following CSS code:</p>
+
+<div class="css highlighter-rouge"><pre class="highlight"><code>body {
+	padding: 0;
+	margin: 0;
+}
+html, body, #map {
+	height: 100%;
+}
+</code></pre>
+</div>
+
+<p>Also, we need to tell the mobile browser to disable unwanted scaling of the page and set it to its actual size by placing the following line in the <code class="highlighter-rouge">head</code> section or our HTML page:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&gt;
+</code></pre>
+</div>
+
+<h3 id="initializing-the-map">Initializing the map</h3>
+
+<p>We&#8217;ll now initialize the map in the JavaScript code exactly like we did in the <a href="quick-start.html">quick start guide</a>, but won&#8217;t set the map view yet:</p>
+
+<pre><code class="javascript">var map = L.map('map');
+
+L.tileLayer('https://api.tiles.mapbox.com/v4/<a href="https://mapbox.com">MapID</a>/997/256/{z}/{x}/{y}.png?access_token={accessToken}', {
+	attribution: 'Map data &amp;copy; <span class="text-cut" data-cut="[&hellip;]">&lt;a href="http://openstreetmap.org"&gt;OpenStreetMap&lt;/a&gt; contributors, &lt;a href="http://creativecommons.org/licenses/by-sa/2.0/"&gt;CC-BY-SA&lt;/a&gt;, Imagery &copy; &lt;a href="http://mapbox.com"&gt;Mapbox&lt;/a&gt;</span>',
+	maxZoom: 18
+}).addTo(map);</code></pre>
+
+<h3 id="geolocation">Geolocation</h3>
+
+<p>Leaflet has a very handy shortcut for zooming the map view to the detected location &#8212; <code class="highlighter-rouge">locate</code> method with the <code class="highlighter-rouge">setView</code> option, replacing the usual <code class="highlighter-rouge">setView</code> method in the code:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>map.locate({setView: true, maxZoom: 16});
+</code></pre>
+</div>
+
+<p>Here we specify 16 as the maximum zoom when setting the map view automatically. As soon as the user agrees to share its location and it&#8217;s detected by the browser, the map will set the view to it. Now we have a working fullscreen mobile map! But what if we need to do something after the geolocation completed? Here&#8217;s what the <code class="highlighter-rouge">locationfound</code> and <code class="highlighter-rouge">locationerror</code> events are for. Let&#8217;s for example add a marker in the detected location, showing accuracy in a popup, by adding an event listener to <code class="highlighter-rouge">locationfound</code> event before the <code class="highlighter-rouge">locateAndSetView</code> call:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function onLocationFound(e) {
+	var radius = e.accuracy / 2;
+
+	L.marker(e.latlng).addTo(map)
+		.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+	L.circle(e.latlng, radius).addTo(map);
+}
+
+map.on('locationfound', onLocationFound);
+</code></pre>
+</div>
+
+<p>Excellent! But it would also be nice to show an error message if the geolocation failed:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function onLocationError(e) {
+	alert(e.message);
+}
+
+map.on('locationerror', onLocationError);
+</code></pre>
+</div>
+
+<p>If you have <code class="highlighter-rouge">setView</code> option set to true and the geolocation failed, it will set the view to the whole world.</p>
+
+<p>Now the example is complete &#8212; try it on your mobile phone: <a href="mobile-example.html">View the full example &rarr;</a></p>
+
+<p>Next steps would be to take a look at the detailed <a href="../reference.html">documentation</a> and browse <a href="../examples.html">other examples</a>.</p>
+
+
+<div class="footer">
+	<p>&copy; 翻译 <a href="http://www.yanglonglong.com">杨龙龙</a>. &copy; <a href="http://leafletjs.com/"> Leaflet </a> 官方网站.</p>
+</div>
+
+</div>
+
+<nav class="ext-links">
+  <a class="ext-link twitter" href="http://twitter.com/LeafletJS" title="Follow LeafletJS on Twitter"><img alt="Follow LeafletJS on Twitter" src="../docs/images/twitter-round.png" width="46" /></a>
+  <a class="ext-link github" href="http://github.com/Leaflet/Leaflet" title="View Source on GitHub"><img alt="View Source on GitHub" src="../docs/images/github-round.png" width="46" /></a>
+  <a class="ext-link forum" href="https://stackoverflow.com/questions/tagged/leaflet" title="Ask for help on Stack Overflow"><img alt="Leaflet questions on Stack Overflow" src="../docs/images/forum-round.png" width="46" /></a>
+
+</nav>
+
+<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlighting();
+
+	(function () {
+		if (document.body.className.indexOf('api-page') !== -1) {
+			var headers = document.getElementsByTagName('h2');
+
+			for (var i = 0, len = headers.length; i < len; i++) {
+				if (headers[i].id) {
+					headers[i].onclick = function(e) {
+						if (e.offsetX < 0) {
+							window.location.hash = '#' + this.id;
+						}
+					};
+				}
+			}
+		}
+	})();
+</script>
+
+<script>
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-4147697-4' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<script type="text/javascript" src="../docs/js/docs.js"></script>
+</body>
+</html>

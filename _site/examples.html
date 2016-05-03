@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+	<title>Tutorials - Leaflet - a JavaScript library for interactive maps</title>
+
+	<meta charset="utf-8" />
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+
+	<link rel="shortcut icon" type="image/x-icon" href="../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="../docs/css/normalize.css" />
+	<link rel="stylesheet" href="../docs/css/main.css" />
+
+	<script src="../docs/highlight/highlight.pack.js"></script>
+	<link rel="stylesheet" href="../docs/highlight/styles/github-gist.css" />
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	
+
+	<script>
+		ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+	</script>
+</head>
+<body class="examples">
+
+<h1><a href="http://leafletjs.com"><img src="../docs/images/logo.png" alt="Leaflet" width="300" /></a></h1>
+<h3 class="tagline">开源JavaScript WebGIS库<br>移动友好，交互性强</h3>
+
+<ul class="nav">
+	<li>
+		
+			<a href="../index.html">概述</a>
+		
+	</li>
+	<li>
+		
+			<span>教程</span>
+		
+	</li>
+	<li>
+		
+			<a href="../reference.html">文档</a>
+		
+	</li>
+	<li>
+		
+			<a href="../download.html">下载</a>
+		
+	</li>
+	<li>
+		
+			<a href="../plugins.html">插件</a>
+		
+	</li>
+	<li>
+		
+			<a href="../blog.html">中文社区</a>
+		
+	</li>
+</ul>
+
+<div class="container">
+
+
+<h2 id="leaflet">Leaflet教程</h2>
+
+<p>这里的每个学习实例都将一步一步的讲解代码，对于JavaScript初学者是很容易上手的。</p>
+
+<hr />
+<p><a href="examples/quick-start.html"><img src="docs/images/quick-start.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="leaflet1"><a href="examples/quick-start.html">Leaflet快速开始</a></h3>
+
+<p>这是一个学习Leaflet最基础的例子，包括在页面中设置Leaflet地图（使用Mapbox地图），使用标注点、线、弹出框和事件的处理。</p>
+
+<hr />
+<p><a href="examples/mobile.html"><img src="docs/images/mobile.png" class="example-img" /></a></p>
+
+<h3 id="leaflet2"><a href="examples/mobile.html">在移动端使用Leaflet</a></h3>
+
+<p>在这个例子中，你将学到如何在移动设备中创建一个全屏的地图，以及如何使用用户当前的地理位置。</p>
+
+<hr />
+<p><a href="examples/custom-icons.html"><img src="docs/images/custom-icons.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="section"><a href="examples/custom-icons.html">使用自定义图标的标注点</a></h3>
+
+<p>在这个小例子中，你将学会如何使用自定义的图标作为地图上的标注点。</p>
+
+<hr />
+<p><a href="examples/geojson.html"><img src="docs/images/geojson.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="leaflefgeojson4"><a href="examples/geojson.html">在Leaflef中使用GeoJSON</a></h3>
+
+<p>在这个例子中，你将学会如何使用GeoJSON创建一个矢量图层，并与该图层进行交互。</p>
+
+<hr />
+<p><a href="examples/choropleth.html"><img src="docs/images/choropleth.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="section-1"><a href="examples/choropleth.html">可交互的分级统计地图</a></h3>
+
+<p>这个例子讲创建一个色彩丰富可交互的<a href="http://en.wikipedia.org/wiki/Choropleth_map">分级统计地图</a>，数据使用美国人口密度图（GeoJSON格式），并在网页中使用了一些自定义的地图控件。一些新闻类网站会喜欢使用这种类型的地图。</p>
+
+<hr />
+<p><a href="examples/layers-control.html"><img src="docs/images/layers-control.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="section-2"><a href="examples/layers-control.html">图层分组和图层控制</a></h3>
+
+<p>这个例子将告诉你如何管理地图图层，并且如何使用图层切换控件。</p>
+
+<hr />
+<p><a href="examples/crs-simple/crs-simple.html"><img src="examples/crs-simple/thumbnail.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="section-3"><a href="examples/crs-simple/crs-simple.html">没有地理信息的地图</a></h3>
+
+<p>这个例子主要是使用<code class="highlighter-rouge">L.CRS.Simple</code>，告诉你在没有经纬度的概念下如何构建地图。 how to make maps with no concept of &#8220;latitude&#8221; or &#8220;longitude&#8221;.</p>
+
+<hr />
+<p><a href="examples/wms/wms.html"><img src="examples/wms/thumbnail.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="wmstms10"><a href="examples/wms/wms.html">WMS和TMS</a></h3>
+
+<p>如何从专业地理信息系统中整个WMS和TMS服务。</p>
+
+<hr />
+
+<p>下面的例子所使用的特性只在<strong>Leaflet 1.0</strong>中可用：</p>
+
+<hr />
+<p><a href="examples/map-panes.html"><img src="docs/images/labels-pane.png" class="example-img bordered-img" /></a></p>
+
+<h3 id="panes8"><a href="examples/map-panes.html">使用地图分层(panes)</a></h3>
+
+<p>这个例子主要告诉你如何使默认的地图分层显示在瓦片图层的顶部，并且如何覆盖它。</p>
+
+<hr />
+<p>如何你发现这里所没有的重要的例子，请告诉我们！</p>
+
+
+
+<div class="footer">
+	<p>&copy; 翻译 <a href="http://www.yanglonglong.com">杨龙龙</a>. &copy; <a href="http://leafletjs.com/"> Leaflet </a> 官方网站.</p>
+</div>
+
+</div>
+
+<nav class="ext-links">
+  <a class="ext-link twitter" href="http://twitter.com/LeafletJS" title="Follow LeafletJS on Twitter"><img alt="Follow LeafletJS on Twitter" src="../docs/images/twitter-round.png" width="46" /></a>
+  <a class="ext-link github" href="http://github.com/Leaflet/Leaflet" title="View Source on GitHub"><img alt="View Source on GitHub" src="../docs/images/github-round.png" width="46" /></a>
+  <a class="ext-link forum" href="https://stackoverflow.com/questions/tagged/leaflet" title="Ask for help on Stack Overflow"><img alt="Leaflet questions on Stack Overflow" src="../docs/images/forum-round.png" width="46" /></a>
+
+</nav>
+
+<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlighting();
+
+	(function () {
+		if (document.body.className.indexOf('api-page') !== -1) {
+			var headers = document.getElementsByTagName('h2');
+
+			for (var i = 0, len = headers.length; i < len; i++) {
+				if (headers[i].id) {
+					headers[i].onclick = function(e) {
+						if (e.offsetX < 0) {
+							window.location.hash = '#' + this.id;
+						}
+					};
+				}
+			}
+		}
+	})();
+</script>
+
+<script>
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-4147697-4' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<script type="text/javascript" src="../docs/js/docs.js"></script>
+</body>
+</html>

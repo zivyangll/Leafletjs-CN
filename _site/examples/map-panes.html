@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+	<title>Working with map panes - Leaflet - a JavaScript library for interactive maps</title>
+
+	<meta charset="utf-8" />
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+
+	<link rel="shortcut icon" type="image/x-icon" href="../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="../docs/css/normalize.css" />
+	<link rel="stylesheet" href="../docs/css/main.css" />
+
+	<script src="../docs/highlight/highlight.pack.js"></script>
+	<link rel="stylesheet" href="../docs/highlight/styles/github-gist.css" />
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	
+
+	<script>
+		ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+	</script>
+</head>
+<body>
+
+<h1><a href="http://leafletjs.com"><img src="../docs/images/logo.png" alt="Leaflet" width="300" /></a></h1>
+<h3 class="tagline">开源JavaScript WebGIS库<br>移动友好，交互性强</h3>
+
+<ul class="nav">
+	<li>
+		
+			<a href="../index.html">概述</a>
+		
+	</li>
+	<li>
+		
+			<a href="../examples.html">教程</a>
+		
+	</li>
+	<li>
+		
+			<a href="../reference.html">文档</a>
+		
+	</li>
+	<li>
+		
+			<a href="../download.html">下载</a>
+		
+	</li>
+	<li>
+		
+			<a href="../plugins.html">插件</a>
+		
+	</li>
+	<li>
+		
+			<a href="../blog.html">中文社区</a>
+		
+	</li>
+</ul>
+
+<div class="container">
+
+
+<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+
+<h2 id="what-are-panes">What are panes?</h2>
+
+<p>In Leaflet, map panes group layers together implicitly, without the developer knowing about it. This grouping allows web browsers to work with several layers at once in a more efficient way than working with layers individually.</p>
+
+<p>Map panes use the <a href="https://developer.mozilla.org/docs/Web/CSS/z-index">z-index CSS property</a> to always show some layers on top of others. The <a href="http://leafletjs.com/reference.html#map-panes">default order</a> is:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">TileLayer</code>s and <code class="highlighter-rouge">GridLayer</code>s</li>
+  <li><code class="highlighter-rouge">Path</code>s, like lines, polylines, circles, or <code class="highlighter-rouge">GeoJSON</code> layers.</li>
+  <li><code class="highlighter-rouge">Marker</code> shadows</li>
+  <li><code class="highlighter-rouge">Marker</code> icons</li>
+  <li><code class="highlighter-rouge">Popup</code>s</li>
+</ul>
+
+<p>This is why, in Leaflet maps, popups always show &#8220;on top&#8221; of other layers, markers always show on top of tile layers, etc.</p>
+
+<p>A new feature of <strong>Leaflet 1.0.0</strong> (not present in 0.7.x) is custom map panes, which allows for customization of this order.</p>
+
+<h2 id="the-default-is-not-always-right">The default is not always right</h2>
+
+<p>In some particular cases, the default order is not the right one for the map. We can demonstrate this with the <a href="https://cartodb.com/basemaps/">CartoDB basemaps</a> and labels:</p>
+
+<style>
+.tiles img {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+</style>
+
+<div class="tiles">
+<div style="display: inline-block">
+<img src="http://a.basemaps.cartocdn.com/light_nolabels/0/0/0.png" class="bordered-img" /><br />
+Basemap tile with no labels
+</div>
+
+<div style="display: inline-block">
+<img src="http://a.basemaps.cartocdn.com/light_only_labels/0/0/0.png" class="bordered-img" /><br />
+Transparent labels-only tile
+</div>
+
+<div style="display: inline-block; position:relative;">
+<img src="http://a.basemaps.cartocdn.com/light_nolabels/0/0/0.png" class="bordered-img" />
+<img src="http://a.basemaps.cartocdn.com/light_only_labels/0/0/0.png" style="position:absolute; left:0; top:0;" /><br />
+Labels on top of basemap
+</div>
+</div>
+
+<p>If we create a Leaflet map with these two tile layers, any marker or polygon will show on top of both, but having the labels on top <a href="http://blog.cartodb.com/let-your-labels-shine/">looks much nicer</a>. How can we do that?</p>
+
+<div id="map" class="map" style="height: 250px"></div>
+
+<link rel="stylesheet" href="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.css" />
+
+<script src="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.js"></script>
+
+<script type="text/javascript" src="eu-countries.js"></script>
+
+<script>
+var map = L.map('map');
+
+map.createPane('labels');    
+
+// This pane is above markers but below popups
+map.getPane('labels').style.zIndex = 650;	
+
+// Layers in this pane are non-interactive and do not obscure mouse/touch events
+map.getPane('labels').style.pointerEvents = 'none';	
+
+
+var cartodbAttribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+
+var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+        attribution: cartodbAttribution
+}).addTo(map);
+
+var positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+        attribution: cartodbAttribution,
+        pane: 'labels'
+}).addTo(map);
+
+geojson = L.geoJson(euCountries).addTo(map);
+
+geojson.eachLayer(function (layer) {
+    layer.bindPopup(layer.feature.properties.name);
+});
+
+map.setView({ lat: 47.040182144806664, lng: 9.667968750000002 }, 4);
+</script>
+
+<h2 id="custom-pane">Custom pane</h2>
+
+<p>We can use the defaults for the basemap tiles and some overlays like GeoJSON layers, but we have to define a custom pane for the labels, so they show on top of the GeoJSON data.</p>
+
+<p>Custom map panes are created on a per-map basis, so first create an instance of <code class="highlighter-rouge">L.Map</code> and the pane:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var map = L.map('map');
+map.createPane('labels');
+</code></pre>
+</div>
+
+<p>The next step is setting the z-index of the pane. Looking at the <a href="https://github.com/Leaflet/Leaflet/blob/master/dist/leaflet.css#L73">defaults</a>, a value of 650 will make the <code class="highlighter-rouge">TileLayer</code> with the labels show on top of markers but below pop-ups. By using <code class="highlighter-rouge">getPane()</code>, we have a reference to the <a href="https://developer.mozilla.org/docs/Web/API/HTMLElement"><code class="highlighter-rouge">HTMLElement</code></a> representing the pane, and change its z-index:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>map.getPane('labels').style.zIndex = 650;
+</code></pre>
+</div>
+
+<p>One of the problems of having image tiles on top of other map layers is that the tiles will capture clicks and touches. If a user clicks anywhere on the map, the web browser will assume she clicked on the labels tiles, and not on the GeoJSON or on the markers. This can be solved using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events">the <code class="highlighter-rouge">pointer-events</code> CSS property</a>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>map.getPane('labels').style.pointerEvents = 'none';
+</code></pre>
+</div>
+
+<p>With the pane now ready, we can add the layers, paying attention to use the <code class="highlighter-rouge">pane</code> option on the labels tiles:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+        attribution: '©OpenStreetMap, ©CartoDB'
+}).addTo(map);
+
+var positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+        attribution: '©OpenStreetMap, ©CartoDB',
+        pane: 'labels'
+}).addTo(map);
+
+var geojson = L.geoJson(GeoJsonData, geoJsonOptions).addTo(map);
+</code></pre>
+</div>
+
+<p>Finally, add some interaction to each feature on the GeoJSON layer:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>geojson.eachLayer(function (layer) {
+    layer.bindPopup(layer.feature.properties.name);
+});
+
+map.fitBounds(geojson.getBounds());
+</code></pre>
+</div>
+
+<p>Now the <a href="map-panes-example.html">example map</a> is complete!</p>
+
+
+
+<div class="footer">
+	<p>&copy; 翻译 <a href="http://www.yanglonglong.com">杨龙龙</a>. &copy; <a href="http://leafletjs.com/"> Leaflet </a> 官方网站.</p>
+</div>
+
+</div>
+
+<nav class="ext-links">
+  <a class="ext-link twitter" href="http://twitter.com/LeafletJS" title="Follow LeafletJS on Twitter"><img alt="Follow LeafletJS on Twitter" src="../docs/images/twitter-round.png" width="46" /></a>
+  <a class="ext-link github" href="http://github.com/Leaflet/Leaflet" title="View Source on GitHub"><img alt="View Source on GitHub" src="../docs/images/github-round.png" width="46" /></a>
+  <a class="ext-link forum" href="https://stackoverflow.com/questions/tagged/leaflet" title="Ask for help on Stack Overflow"><img alt="Leaflet questions on Stack Overflow" src="../docs/images/forum-round.png" width="46" /></a>
+
+</nav>
+
+<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlighting();
+
+	(function () {
+		if (document.body.className.indexOf('api-page') !== -1) {
+			var headers = document.getElementsByTagName('h2');
+
+			for (var i = 0, len = headers.length; i < len; i++) {
+				if (headers[i].id) {
+					headers[i].onclick = function(e) {
+						if (e.offsetX < 0) {
+							window.location.hash = '#' + this.id;
+						}
+					};
+				}
+			}
+		}
+	})();
+</script>
+
+<script>
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-4147697-4' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<script type="text/javascript" src="../docs/js/docs.js"></script>
+</body>
+</html>

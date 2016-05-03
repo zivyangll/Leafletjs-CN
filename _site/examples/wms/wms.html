@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+	<title>Using WMS and TMS services - Leaflet - a JavaScript library for interactive maps</title>
+
+	<meta charset="utf-8" />
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+
+	<link rel="shortcut icon" type="image/x-icon" href="../../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="../../docs/css/normalize.css" />
+	<link rel="stylesheet" href="../../docs/css/main.css" />
+
+	<script src="../../docs/highlight/highlight.pack.js"></script>
+	<link rel="stylesheet" href="../../docs/highlight/styles/github-gist.css" />
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	
+
+	<script>
+		ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+	</script>
+</head>
+<body>
+
+<h1><a href="http://leafletjs.com"><img src="../../docs/images/logo.png" alt="Leaflet" width="300" /></a></h1>
+<h3 class="tagline">开源JavaScript WebGIS库<br>移动友好，交互性强</h3>
+
+<ul class="nav">
+	<li>
+		
+			<a href="../../index.html">概述</a>
+		
+	</li>
+	<li>
+		
+			<a href="../../examples.html">教程</a>
+		
+	</li>
+	<li>
+		
+			<a href="../../reference.html">文档</a>
+		
+	</li>
+	<li>
+		
+			<a href="../../download.html">下载</a>
+		
+	</li>
+	<li>
+		
+			<a href="../../plugins.html">插件</a>
+		
+	</li>
+	<li>
+		
+			<a href="../../blog.html">中文社区</a>
+		
+	</li>
+</ul>
+
+<div class="container">
+
+
+<p class="tutorials-back"><a href="../../examples.html">&larr; Tutorials</a></p>
+
+<style>
+iframe {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+</style>
+
+<p><br /></p>
+
+<p>WMS, short for <a href="https://en.wikipedia.org/wiki/Web_Map_Service"><em>web map service</em></a>, is a popular way of publishing maps by professional GIS software (and seldomly used by non-GISers). This format is similar to map tiles, but more generic and not so well optimized for use in web maps. A WMS image is defined by the coordinates of its corners - a calculation that Leaflet does under the hood.</p>
+
+<p>TMS stands for <em>tiled map service</em>, and is a map tiling standard more focused on web maps, very similar to the map tiles that Leaflet expects in a <code class="highlighter-rouge">L.TileLayer</code>.</p>
+
+<h2 id="wms-in-leaflet">WMS in Leaflet</h2>
+
+<p>When somebody publishes a WMS service, most likely they link to something called a <code class="highlighter-rouge">GetCapabilities</code> document. For this tutorial, we&#8217;ll use the demo map services from GeoServer, at http://demo.opengeo.org/geoserver/web/. As you can see in that page, &#8220;WMS&#8221; links to the following URL:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://demo.opengeo.org/geoserver/ows?service=wms&amp;version=1.3.0&amp;request=GetCapabilities
+</code></pre>
+</div>
+
+<p>Leaflet does not understand WMS <code class="highlighter-rouge">GetCapabilities</code> documents. Instead, you have to create a <code class="highlighter-rouge">L.TileLayer.WMS</code> layer, provide the base WMS URL, and specify whatever WMS options you need.</p>
+
+<p>The base WMS URL is simply the <code class="highlighter-rouge">GetCapabilities</code> URL, without any parameters, like so:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://demo.opengeo.org/geoserver/ows?
+</code></pre>
+</div>
+
+<p>And the way to use that in a Leaflet map is simply:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var map = L.map(mapDiv, mapOptions);
+
+var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', wmsOptions).addTo(map);
+</code></pre>
+</div>
+
+<p>An instance of <code class="highlighter-rouge">L.TileLayer.WMS</code> needs at least one option: <code class="highlighter-rouge">layers</code>. Be careful, as the concept of &#8220;layer&#8221; in Leaflet is different from the concept of &#8220;layer&#8221; in WMS!</p>
+
+<p>WMS servers define a set of <em>layers</em> in the service. These are defined in the <code class="highlighter-rouge">GetCapabilities</code> XML document, which most times is tedious and difficult to understand. Usually it&#8217;s a good idea to use software such as <a href="http://www.qgistutorials.com/en/docs/working_with_wms.html">QGIS to see what layers are available in a WMS server</a> to see the layer names available:</p>
+
+<p><img src="qgis-wms-layers.png" alt="Discovering WMS layers with QGIS" /></p>
+
+<p>We can see that the OpenGeo demo WMS has a WMS layer named <code class="highlighter-rouge">ne:ne</code> with a basemap. Let&#8217;s see how it looks:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+	layers: 'ne:ne'
+}).addTo(map);
+</code></pre>
+</div>
+
+<table>
+<tr><td style="text-align: center; border: none">
+<iframe src="wms-example1.html" width="616" height="416"></iframe>
+</td></tr>
+<tr><td style="text-align: center; border: none">
+<small><a href="wms-example1.html">See this example stand-alone.</a></small>
+</td></tr></table>
+
+<p>Or we can try the <code class="highlighter-rouge">nasa:bluemarble</code> WMS layer:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+	layers: 'nasa:bluemarble'
+}).addTo(map);
+</code></pre>
+</div>
+
+<table>
+<tr><td style="text-align: center; border: none">
+<iframe src="wms-example2.html" width="616" height="416"></iframe>
+</td></tr>
+<tr><td style="text-align: center; border: none">
+<small><a href="wms-example2.html">See this example stand-alone.</a></small>
+</td></tr></table>
+
+<p>The <code class="highlighter-rouge">layers</code> option is a comma-separated list of layers. If a WMS service has defined several layers, then a request for a map image can refer to more than one layer.</p>
+
+<p>For the example WMS server we&#8217;re using, there is a <code class="highlighter-rouge">ne:ne_10m_admin_0_countries</code> WMS layer showing country landmasses and country names, and a <code class="highlighter-rouge">ne:ne_10m_admin_0_boundary_lines_land</code> WMS layer showing country boundaries. The WMS server will compose both layers in one image if we request both, separated with a comma:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var countriesAndBoundaries = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+	layers: 'ne:ne_10m_admin_0_countries,ne:ne_10m_admin_0_boundary_lines_land'
+}).addTo(map);
+</code></pre>
+</div>
+
+<p>Note this will request <em>one</em> image to the WMS server. This is different than creating a <code class="highlighter-rouge">L.TileLayer.WMS</code> for the countries, another one for the boundaries, and adding them both to the map. In the first case, there is one image request and it&#8217;s the WMS server who decides how to compose (put on top of each other) the image. In the second case, there would be two image requests and it&#8217;s the Leaflet code running in the web browser who decides how to compose them.</p>
+
+<p>If we combine this with the <a href="/examples/layers-control.html">layers control</a>, then we can build a simple map to see the difference:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var basemaps = {
+	Countries: L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+		layers: 'ne:ne_10m_admin_0_countries'
+	}),
+
+	Boundaries: L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+		layers: 'ne:ne_10m_admin_0_boundary_lines_land'
+	}),
+
+	'Countries, then boundaries': L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+		layers: 'ne:ne_10m_admin_0_countries,ne:ne_10m_admin_0_boundary_lines_land'
+	}),
+
+	'Boundaries, then countries': L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+		layers: 'ne:ne_10m_admin_0_boundary_lines_land,ne:ne_10m_admin_0_countries'
+	})
+};
+
+L.control.layers(basemaps).addTo(map);
+
+basemaps.Countries.addTo(map);
+</code></pre>
+</div>
+
+<p>Change to the &#8220;Countries, then boundaries&#8221; option, so you can see the boundaries &#8220;on top&#8221; of the landmasses, but the WMS server is clever enough to display building labels on top of that. It&#8217;s up to the WMS server how to compose layers when asked for many.</p>
+
+<table>
+<tr><td style="text-align: center; border: none">
+<iframe src="wms-example3.html" width="616" height="416"></iframe>
+</td></tr>
+<tr><td style="text-align: center; border: none">
+<small><a href="wms-example3.html">See this example stand-alone.</a></small>
+</td></tr></table>
+
+<h3 id="notes-to-gis-users-of-wms-services">Notes to GIS users of WMS services</h3>
+
+<p>From a GIS point of view, WMS handling in Leaflet is quite basic. There&#8217;s no <code class="highlighter-rouge">GetCapabilities</code> support, no legend support, and no <code class="highlighter-rouge">GetFeatureInfo</code> support.</p>
+
+<p><code class="highlighter-rouge">L.TileLayer.WMS</code> has extra options, which can be found in <a href="http://leafletjs.com/reference.html#tilelayer-wms-options">Leaflet&#8217;s API documentation</a>. Any option not described there will be passed to the WMS server in the <code class="highlighter-rouge">getImage</code> URLs.</p>
+
+<p>Also note that Leaflet supports very few <a href="https://en.wikipedia.org/wiki/Spatial_reference_system">coordinate systems</a>: <code class="highlighter-rouge">CRS:3857</code>, <code class="highlighter-rouge">CRS:3395</code> and <code class="highlighter-rouge">CRS:4326</code> (See the documentation for <code class="highlighter-rouge">L.CRS</code>). If your WMS service doesn&#8217;t serve images in those coordinate systems, you might need to use <a href="https://github.com/kartena/Proj4Leaflet">Proj4Leaflet</a> to use a different coordinate system in Leaflet. Other than that, just use the right CRS when initializing your map, and any WMS layers added will use it:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var map = L.map('map', {
+	crs: L.CRS.EPSG4326
+});
+
+var wmsLayer = L.tileLayer.wms('http://demo.opengeo.org/geoserver/ows?', {
+	layers: 'nasa:bluemarble'
+}).addTo(map);
+</code></pre>
+</div>
+
+<table>
+<tr><td style="text-align: center; border: none">
+<iframe src="wms-example-crs.html" width="616" height="416"></iframe>
+</td></tr>
+<tr><td style="text-align: center; border: none">
+<small><a href="wms-example-crs.html">See this example stand-alone.</a></small>
+</td></tr></table>
+
+<h2 id="tms-in-leaflet">TMS in Leaflet</h2>
+
+<p>Leaflet doesn&#8217;t have explicit support for TMS services, but the tile naming structure is so similar to the common <code class="highlighter-rouge">L.TileLayer</code> naming scheme, that displaying a TMS service is almost trivial.</p>
+
+<p>Using the same OpenGeo WMS/TMS server demo, we can see there&#8217;s a TMS endpoint at:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0
+</code></pre>
+</div>
+
+<p>Checking the <a href="http://mapserver.org/mapcache/services.html">MapCache help about TMS</a> and the <a href="https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification">TMS specification</a> you can see that the URL for a map tile in TMS looks like:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://base_url/tms/1.0.0/ {tileset} / {z} / {x} / {y} .png
+</code></pre>
+</div>
+
+<p>To use the OpenGeo TMS services as a <code class="highlighter-rouge">L.TileLayer</code>, we can check the capabilities document (the same as the base endpoint, in our case <a href="http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0"><code class="highlighter-rouge">http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0</code></a>) to see what <code class="highlighter-rouge">tileset</code>s are available, and build our base URLs:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0/ne:ne@EPSG:900913@png/{z}/{x}/{y}.png
+
+http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0/nasa:bluemarble@EPSG:900913@jpg/{z}/{x}/{y}.jpg
+</code></pre>
+</div>
+
+<p>And use the <code class="highlighter-rouge">tms:true</code> option when instantiating the layers, like so:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var tms_ne = L.tileLayer('http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0/ne:ne@EPSG:900913@png/{z}/{x}/{y}.png', {
+	tms: true
+}).addTo(map);
+
+var tms_bluemarble = L.tileLayer('http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0/nasa:bluemarble@EPSG:900913@jpg/{z}/{x}/{y}.jpg', {
+	tms: true
+});
+</code></pre>
+</div>
+
+<table>
+<tr><td style="text-align: center; border: none">
+<iframe src="wms-example4.html" width="616" height="416"></iframe>
+</td></tr>
+<tr><td style="text-align: center; border: none">
+<small><a href="wms-example4.html">See this example stand-alone.</a></small>
+</td></tr></table>
+
+<p>A new feature in <strong>Leaflet 1.0</strong> is the ability to use <code class="highlighter-rouge"><span class="p">{</span><span class="err">-y</span><span class="p">}</span></code> in the URL instead of a <code class="highlighter-rouge">tms: true</code> option, e.g.:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var layer = L.tileLayer('http://base_url/tms/1.0.0/tileset/{z}/{x}/{-y}.png');
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">tms: true</code> option (in Leaflet 0.7) or <code class="highlighter-rouge"><span class="p">{</span><span class="err">-y</span><span class="p">}</span></code> (in Leaflet 1.0) are needed because the origin of coordinates of vanilla <code class="highlighter-rouge">L.TileLayer</code>s is the top left corner, so the Y coordinate goes <em>down</em>. In TMS, the origin of coordinates is the <em>bottom</em> left corner so the Y coordinate goes <em>up</em>.</p>
+
+<p>Besides the difference in the <code class="highlighter-rouge">y</code> coordinate and the discovery of tilesets, TMS services serve tiles exactly in the way that <code class="highlighter-rouge">L.TileLayer</code> expects.</p>
+
+
+<div class="footer">
+	<p>&copy; 翻译 <a href="http://www.yanglonglong.com">杨龙龙</a>. &copy; <a href="http://leafletjs.com/"> Leaflet </a> 官方网站.</p>
+</div>
+
+</div>
+
+<nav class="ext-links">
+  <a class="ext-link twitter" href="http://twitter.com/LeafletJS" title="Follow LeafletJS on Twitter"><img alt="Follow LeafletJS on Twitter" src="../../docs/images/twitter-round.png" width="46" /></a>
+  <a class="ext-link github" href="http://github.com/Leaflet/Leaflet" title="View Source on GitHub"><img alt="View Source on GitHub" src="../../docs/images/github-round.png" width="46" /></a>
+  <a class="ext-link forum" href="https://stackoverflow.com/questions/tagged/leaflet" title="Ask for help on Stack Overflow"><img alt="Leaflet questions on Stack Overflow" src="../../docs/images/forum-round.png" width="46" /></a>
+
+</nav>
+
+<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlighting();
+
+	(function () {
+		if (document.body.className.indexOf('api-page') !== -1) {
+			var headers = document.getElementsByTagName('h2');
+
+			for (var i = 0, len = headers.length; i < len; i++) {
+				if (headers[i].id) {
+					headers[i].onclick = function(e) {
+						if (e.offsetX < 0) {
+							window.location.hash = '#' + this.id;
+						}
+					};
+				}
+			}
+		}
+	})();
+</script>
+
+<script>
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-4147697-4' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<script type="text/javascript" src="../../docs/js/docs.js"></script>
+</body>
+</html>

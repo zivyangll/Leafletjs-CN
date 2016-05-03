@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+	<title>Markers With Custom Icons - Leaflet - a JavaScript library for interactive maps</title>
+
+	<meta charset="utf-8" />
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+
+	<link rel="shortcut icon" type="image/x-icon" href="../docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="../docs/css/normalize.css" />
+	<link rel="stylesheet" href="../docs/css/main.css" />
+
+	<script src="../docs/highlight/highlight.pack.js"></script>
+	<link rel="stylesheet" href="../docs/highlight/styles/github-gist.css" />
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	
+
+	<script>
+		ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw';
+		MB_ATTR = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+	</script>
+</head>
+<body>
+
+<h1><a href="http://leafletjs.com"><img src="../docs/images/logo.png" alt="Leaflet" width="300" /></a></h1>
+<h3 class="tagline">开源JavaScript WebGIS库<br>移动友好，交互性强</h3>
+
+<ul class="nav">
+	<li>
+		
+			<a href="../index.html">概述</a>
+		
+	</li>
+	<li>
+		
+			<a href="../examples.html">教程</a>
+		
+	</li>
+	<li>
+		
+			<a href="../reference.html">文档</a>
+		
+	</li>
+	<li>
+		
+			<a href="../download.html">下载</a>
+		
+	</li>
+	<li>
+		
+			<a href="../plugins.html">插件</a>
+		
+	</li>
+	<li>
+		
+			<a href="../blog.html">中文社区</a>
+		
+	</li>
+</ul>
+
+<div class="container">
+
+
+<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+
+<h2 id="markers-with-custom-icons">Markers With Custom Icons</h2>
+
+<p>In this tutorial, you&#8217;ll learn how to easily define your own icons for use by the markers you put on the map.</p>
+
+<div id="map" class="map" style="height: 220px"></div>
+
+<p><a href="custom-icons-example.html">View example on a separate page &rarr;</a></p>
+
+<h3 id="preparing-the-images">Preparing the images</h3>
+
+<p>To make a custom icon, we usually need two images &#8212; the actual icon image and the image of its shadow. For this tutorial, we took the Leaflet logo and created four images out of it &#8212; 3 leaf images of different colors and one shadow image for the three:</p>
+
+<p>
+	<img style="border: 1px solid #ccc" src="../docs/images/leaf-green.png" />
+	<img style="border: 1px solid #ccc" src="../docs/images/leaf-red.png" />
+	<img style="border: 1px solid #ccc" src="../docs/images/leaf-orange.png" />
+	<img style="border: 1px solid #ccc" src="../docs/images/leaf-shadow.png" />
+</p>
+
+<p>Note that the white area in the images is actually transparent.</p>
+
+<h3 id="creating-an-icon">Creating an icon</h3>
+
+<p>Marker icons in Leaflet are defined by <a href="../reference.html#icon">L.Icon</a> objects, which are passed as an option when creating markers. Let&#8217;s create a green leaf icon:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var greenIcon = L.icon({
+	iconUrl: 'leaf-green.png',
+	shadowUrl: 'leaf-shadow.png',
+
+	iconSize:     [38, 95], // size of the icon
+	shadowSize:   [50, 64], // size of the shadow
+	iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+	shadowAnchor: [4, 62],  // the same for the shadow
+	popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+</code></pre>
+</div>
+
+<p>Now putting a marker with this icon on a map is easy:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map);
+</code></pre>
+</div>
+
+<div id="map2" class="map" style="height: 220px"></div>
+
+<h3 id="defining-an-icon-class">Defining an icon class</h3>
+
+<p>What if we need to create several icons that have lots in common? Let&#8217;s define our own icon class containing the shared options, inheriting from <code class="highlighter-rouge">L.Icon</code>! It&#8217;s really easy in Leaflet:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var LeafIcon = L.Icon.extend({
+	options: {
+		shadowUrl: 'leaf-shadow.png',
+		iconSize:     [38, 95],
+		shadowSize:   [50, 64],
+		iconAnchor:   [22, 94],
+		shadowAnchor: [4, 62],
+		popupAnchor:  [-3, -76]
+	}
+});
+</code></pre>
+</div>
+
+<p>Now we can create all three of our leaf icons from this class and use them:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
+	redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
+	orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
+</code></pre>
+</div>
+
+<p>You may have noticed that we used the <code class="highlighter-rouge">new</code> keyword for creating LeafIcon instances. So why do all Leaflet classes get created without it? The answer is simple: the real Leaflet classes are named with a capital letter (e.g. <code class="highlighter-rouge">L.Icon</code>), and they also need to be created with <code class="highlighter-rouge">new</code>, but there are also shortcuts with lowercase names (<code class="highlighter-rouge">L.icon</code>), created for convenience like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>L.icon = function (options) {
+	return new L.Icon(options);
+};
+</code></pre>
+</div>
+
+<p>You can do the same with your classes too. OK, lets finally put some markers with these icons on the map:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map).bindPopup("I am a green leaf.");
+L.marker([51.495, -0.083], {icon: redIcon}).addTo(map).bindPopup("I am a red leaf.");
+L.marker([51.49, -0.1], {icon: orangeIcon}).addTo(map).bindPopup("I am an orange leaf.");
+</code></pre>
+</div>
+
+<p>That&#8217;s it. Now take a look at the <a href="custom-icons-example.html">full example</a>, the <a href="../reference.html#icon">L.Icon docs</a>, or browse <a href="../examples.html">other examples</a>.</p>
+
+<script>
+	var map = L.map('map').setView([51.5, -0.09], 13);
+
+	L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'mapbox.light'}).addTo(map);
+
+	var LeafIcon = L.Icon.extend({
+		options: {
+			iconUrl: '../docs/images/leaf-green.png',
+			shadowUrl: '../docs/images/leaf-shadow.png',
+			iconSize: [38, 95],
+			shadowSize: [50, 64],
+			iconAnchor: [22, 94],
+			shadowAnchor: [4, 62],
+			popupAnchor: [-3, -76]
+		}
+	});
+
+	var greenIcon = new LeafIcon(),
+		redIcon = new LeafIcon({iconUrl: '../docs/images/leaf-red.png'}),
+		orangeIcon = new LeafIcon({iconUrl: '../docs/images/leaf-orange.png'});
+
+	var marker1 = new L.Marker(new L.LatLng(51.5, -0.09), {icon: greenIcon}),
+		marker2 = new L.Marker(new L.LatLng(51.495, -0.083), {icon: redIcon}),
+		marker3 = new L.Marker(new L.LatLng(51.49, -0.1), {icon: orangeIcon});
+
+	marker1.bindPopup("I am a green leaf.");
+	marker2.bindPopup("I am a red leaf.");
+	marker3.bindPopup("I am an orange leaf.");
+
+	map.addLayer(marker1).addLayer(marker2).addLayer(marker3);
+
+
+
+	var map2 = L.map('map2').setView([51.505, -0.09], 13);
+
+	L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'mapbox.light'}).addTo(map2);
+
+	var greenIcon2 = L.icon({
+		iconUrl: '../docs/images/leaf-green.png',
+		shadowUrl: '../docs/images/leaf-shadow.png',
+		iconSize: [38, 95],
+		shadowSize: [50, 64],
+		iconAnchor: [22, 94],
+		shadowAnchor: [4, 62],
+		popupAnchor: [-3, -76]
+	});
+
+	L.marker([51.5, -0.09], {icon: greenIcon2}).addTo(map2);
+
+</script>
+
+
+
+<div class="footer">
+	<p>&copy; 翻译 <a href="http://www.yanglonglong.com">杨龙龙</a>. &copy; <a href="http://leafletjs.com/"> Leaflet </a> 官方网站.</p>
+</div>
+
+</div>
+
+<nav class="ext-links">
+  <a class="ext-link twitter" href="http://twitter.com/LeafletJS" title="Follow LeafletJS on Twitter"><img alt="Follow LeafletJS on Twitter" src="../docs/images/twitter-round.png" width="46" /></a>
+  <a class="ext-link github" href="http://github.com/Leaflet/Leaflet" title="View Source on GitHub"><img alt="View Source on GitHub" src="../docs/images/github-round.png" width="46" /></a>
+  <a class="ext-link forum" href="https://stackoverflow.com/questions/tagged/leaflet" title="Ask for help on Stack Overflow"><img alt="Leaflet questions on Stack Overflow" src="../docs/images/forum-round.png" width="46" /></a>
+
+</nav>
+
+<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlighting();
+
+	(function () {
+		if (document.body.className.indexOf('api-page') !== -1) {
+			var headers = document.getElementsByTagName('h2');
+
+			for (var i = 0, len = headers.length; i < len; i++) {
+				if (headers[i].id) {
+					headers[i].onclick = function(e) {
+						if (e.offsetX < 0) {
+							window.location.hash = '#' + this.id;
+						}
+					};
+				}
+			}
+		}
+	})();
+</script>
+
+<script>
+	var _gaq = _gaq || [];
+	_gaq.push([ '_setAccount', 'UA-4147697-4' ]);
+	_gaq.push([ '_trackPageview' ]);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+
+<script type="text/javascript" src="../docs/js/docs.js"></script>
+</body>
+</html>
