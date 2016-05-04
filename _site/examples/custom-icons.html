@@ -55,7 +55,7 @@
 	</li>
 	<li>
 		
-			<a href="../reference.html">文档</a>
+			<a href="../reference-1.0.0.html">文档</a>
 		
 	</li>
 	<li>
@@ -78,19 +78,19 @@
 <div class="container">
 
 
-<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+<p class="tutorials-back"><a href="../examples.html">&larr; 所有教程</a></p>
 
-<h2 id="markers-with-custom-icons">Markers With Custom Icons</h2>
+<h2 id="section">使用自定义图标的标注点</h2>
 
-<p>In this tutorial, you&#8217;ll learn how to easily define your own icons for use by the markers you put on the map.</p>
+<p>在这个教程中，你将学会如何使用自定义的图标作为地图上的标注点。</p>
 
 <div id="map" class="map" style="height: 220px"></div>
 
-<p><a href="custom-icons-example.html">View example on a separate page &rarr;</a></p>
+<p><a href="custom-icons-example.html">单独打开页面查看这个例子 &rarr;</a></p>
 
-<h3 id="preparing-the-images">Preparing the images</h3>
+<h3 id="section-1">准备你的图片</h3>
 
-<p>To make a custom icon, we usually need two images &#8212; the actual icon image and the image of its shadow. For this tutorial, we took the Leaflet logo and created four images out of it &#8212; 3 leaf images of different colors and one shadow image for the three:</p>
+<p>我们通常使用两个图片来制作自定义的图标：实际上的图标图片和它的阴影图片。在这个教程中，我们采用Leaflet logo并且创建四个图片－－三个不同颜色的叶子图片和阴影图片：</p>
 
 <p>
 	<img style="border: 1px solid #ccc" src="../docs/images/leaf-green.png" />
@@ -99,11 +99,11 @@
 	<img style="border: 1px solid #ccc" src="../docs/images/leaf-shadow.png" />
 </p>
 
-<p>Note that the white area in the images is actually transparent.</p>
+<p>注意白色部分实际上是透明的。</p>
 
-<h3 id="creating-an-icon">Creating an icon</h3>
+<h3 id="section-2">创建一个图标</h3>
 
-<p>Marker icons in Leaflet are defined by <a href="../reference.html#icon">L.Icon</a> objects, which are passed as an option when creating markers. Let&#8217;s create a green leaf icon:</p>
+<p>Leaflet的标注点图标定义在<a href="../reference.html#icon">L.Icon</a>对象中，它在创建标志点时作为一个参数。让我们创建一个绿色的叶子图标：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var greenIcon = L.icon({
 	iconUrl: 'leaf-green.png',
@@ -118,7 +118,7 @@
 </code></pre>
 </div>
 
-<p>Now putting a marker with this icon on a map is easy:</p>
+<p>现在我们把这个标志点放到地图中：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map);
 </code></pre>
@@ -126,9 +126,9 @@
 
 <div id="map2" class="map" style="height: 220px"></div>
 
-<h3 id="defining-an-icon-class">Defining an icon class</h3>
+<h3 id="section-3">定义一个图标类</h3>
 
-<p>What if we need to create several icons that have lots in common? Let&#8217;s define our own icon class containing the shared options, inheriting from <code class="highlighter-rouge">L.Icon</code>! It&#8217;s really easy in Leaflet:</p>
+<p>如果我们想创造大量类似的图标呢？让我们定义一个图标类，其中包括共享的参数，这个类继承自<code class="highlighter-rouge">L.Icon</code>！它在Leaflet中相当容易实现：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var LeafIcon = L.Icon.extend({
 	options: {
@@ -143,7 +143,7 @@
 </code></pre>
 </div>
 
-<p>Now we can create all three of our leaf icons from this class and use them:</p>
+<p>现在我们使用这个类来创建三个页面图标：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var greenIcon = new LeafIcon({iconUrl: 'leaf-green.png'}),
 	redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
@@ -151,7 +151,7 @@
 </code></pre>
 </div>
 
-<p>You may have noticed that we used the <code class="highlighter-rouge">new</code> keyword for creating LeafIcon instances. So why do all Leaflet classes get created without it? The answer is simple: the real Leaflet classes are named with a capital letter (e.g. <code class="highlighter-rouge">L.Icon</code>), and they also need to be created with <code class="highlighter-rouge">new</code>, but there are also shortcuts with lowercase names (<code class="highlighter-rouge">L.icon</code>), created for convenience like this:</p>
+<p>你可能会注意到我们使用了new关键字来创建LeafIcon实例。那为什么所有的Leaflet类创建时都不使用new？答案时非常简单的：实际上Leaflet类命名为首字母大写的单词，例如<code class="highlighter-rouge">L.Icon</code>，同时它们被创建也需要使用new关键字。但是它们采用了首字母小写的单词来进行转换，例如创建一个转换可能会像下面这样：｀</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>L.icon = function (options) {
 	return new L.Icon(options);
@@ -159,7 +159,7 @@
 </code></pre>
 </div>
 
-<p>You can do the same with your classes too. OK, lets finally put some markers with these icons on the map:</p>
+<p>你可以采用相同的方式来处理你自己的类。在最后，让我我们把这些图标放到地图中：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map).bindPopup("I am a green leaf.");
 L.marker([51.495, -0.083], {icon: redIcon}).addTo(map).bindPopup("I am a red leaf.");
@@ -167,7 +167,7 @@ L.marker([51.49, -0.1], {icon: orangeIcon}).addTo(map).bindPopup("I am an orange
 </code></pre>
 </div>
 
-<p>That&#8217;s it. Now take a look at the <a href="custom-icons-example.html">full example</a>, the <a href="../reference.html#icon">L.Icon docs</a>, or browse <a href="../examples.html">other examples</a>.</p>
+<p>下一步你应该查看详细的<a href="../reference.html">文档</a>或者<a href="../examples.html">其他例子</a>。</p>
 
 <script>
 	var map = L.map('map').setView([51.5, -0.09], 13);
@@ -219,6 +219,7 @@ L.marker([51.49, -0.1], {icon: orangeIcon}).addTo(map).bindPopup("I am an orange
 	L.marker([51.5, -0.09], {icon: greenIcon2}).addTo(map2);
 
 </script>
+
 
 
 

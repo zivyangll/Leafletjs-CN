@@ -57,7 +57,7 @@
 	</li>
 	<li>
 		
-			<a href="../reference.html">文档</a>
+			<a href="../reference-1.0.0.html">文档</a>
 		
 	</li>
 	<li>
@@ -80,23 +80,23 @@
 <div class="container">
 
 
-<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+<p class="tutorials-back"><a href="../examples.html">&larr; 所有教程</a></p>
 
-<h2 id="interactive-choropleth-map">Interactive Choropleth Map</h2>
+<h2 id="section">可交互的分级统计地图</h2>
 
-<p>This is a case study of creating a colorful interactive <a href="http://en.wikipedia.org/wiki/Choropleth_map">choropleth map</a> of US States Population Density with the help of <a href="geojson.html">GeoJSON</a> and some <a href="../reference.html#icontrol">custom controls</a> (that will hopefully convince all the remaining major news and government websites that do not use Leaflet yet to start doing so).</p>
+<p>这个教程讲创建一个色彩丰富可交互的<a href="http://en.wikipedia.org/wiki/Choropleth_map">分级统计地图</a>，数据使用美国人口密度图（GeoJSON格式），并在网页中使用了一些<a href="../reference.html#icontrol">自定义的地图控件</a>（这些地图对一些新闻和政府网站是非常有帮助的）。</p>
 
-<p>The tutorial was inspired by the <a href="http://www.texastribune.org/library/data/us-senate-runoff-results-map/">Texas Tribune US Senate Runoff Results map</a> (also powered by Leaflet), created by <a href="http://www.texastribune.org/about/staff/ryan-murphy/">Ryan Murphy</a>.</p>
+<p>这个教程的灵感来自于<a href="http://www.texastribune.org/library/data/us-senate-runoff-results-map/">Texas Tribune US Senate Runoff Results map</a> （也是Leaflet应用），由<a href="http://www.texastribune.org/about/staff/ryan-murphy/">Ryan Murphy</a>创建。</p>
 
 <div id="map" class="map"></div>
 
-<p><a href="choropleth-example.html">View example on a separate page &rarr;</a></p>
+<p><a href="choropleth-example.html">单独打开页面查看这个例子 &rarr;</a></p>
 
-<h3 id="data-source">Data Source</h3>
+<h3 id="section-1">数据源</h3>
 
-<p>We&#8217;ll be creating a visualization of population density per US state. As the amount of data (state shapes and the density value for each state) is not very big, the most convenient and simple way to store and then display it is <a href="geojson.html">GeoJSON</a>.</p>
+<p>我们将创建一个美国人口密度分布图。数据量并不是很大，用来存储和显示它们最方便和简单方式就是GeoJSON。</p>
 
-<p>Each feature of our GeoJSON data (<a href="us-states.js">us-states.js</a>) will look like this:</p>
+<p>GeoJSON数据(<a href="us-states.js">us-states.js</a>)中的每个特征看起来与下面类似：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
 	</span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
@@ -110,11 +110,11 @@
 </span></code></pre>
 </div>
 
-<p>The GeoJSON with state shapes was kindly shared by <a href="http://bost.ocks.org/mike">Mike Bostock</a> of <a href="http://d3js.org/">D3</a> fame, extended with density values from <a href="http://en.wikipedia.org/wiki/List_of_U.S._states_by_population_density">this Wikipedia article</a> based on July 1st 2011 data from <a href="http://www.census.gov/">US Census Bureau</a> and assigned to <code class="highlighter-rouge">statesData</code> JS variable.</p>
+<p>各州的GeoJSON数据是由<a href="http://d3js.org/">D3</a>的<a href="http://bost.ocks.org/mike">Mike Bostock</a>所分享。从<a href="http://en.wikipedia.org/wiki/List_of_U.S._states_by_population_density">这篇Wikipedia文章</a>扩展了人口密度值，通过将<a href="http://www.census.gov/">US Census Bureau</a>2011年7月1日的数据赋予了statesData变量。</p>
 
-<h3 id="basic-states-map">Basic States Map</h3>
+<h3 id="section-2">基本的州地图</h3>
 
-<p>Let&#8217;s display our states data on a map with a custom Mapbox style for nice grayscale tiles that look perfect as a background for visualizations:</p>
+<p>让我们通过自定义的Mapbox样式在地图上显示各种的数据，底图采用灰色的瓦片地图，这样非常适合作为一个可视化的背景图：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var mapboxAccessToken = {your access token here};
 var map = L.map('map').setView([37.8, -96], 4);
@@ -130,9 +130,9 @@ L.geoJson(statesData).addTo(map);
 
 <div id="map2" style="height: 300px"></div>
 
-<h3 id="adding-some-color">Adding Some Color</h3>
+<h3 id="section-3">增加一些颜色</h3>
 
-<p>Now we need to color the states according to their population density. Choosing nice colors for a map can be tricky, but there&#8217;s a great tool that can help with it &#8212; <a href="http://colorbrewer2.org/">ColorBrewer</a>. Using the values we got from it, we create a function that returns a color based on population density:</p>
+<p>现在我们需要根据各个州的人口密度来添加颜色。在地图上选择一系列好看的颜色是需要技巧的，但是这里有个很棒的工具帮助我们选择颜色－－<a href="http://colorbrewer2.org/">ColorBrewer</a>。我们使用它得到颜色值，并创建一个根据人口密度返回颜色的函数：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function getColor(d) {
 	return d &gt; 1000 ? '#800026' :
@@ -147,7 +147,7 @@ L.geoJson(statesData).addTo(map);
 </code></pre>
 </div>
 
-<p>Next we define a styling function for our GeoJSON layer so that its <code class="highlighter-rouge">fillColor</code> depends on <code class="highlighter-rouge">feature.properties.density</code> property, also adjusting the appearance a bit and adding a nice touch with dashed stroke.</p>
+<p>下一步我们为GeoJSON图层定义一个样式函数，所以它的<code class="highlighter-rouge">fillColor</code>依赖于<code class="highlighter-rouge">feature.properties.density</code>属性。并且可以调整显示样式以及在触摸时增加一个带有虚线边框。</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function style(feature) {
 	return {
@@ -164,13 +164,13 @@ L.geoJson(statesData, {style: style}).addTo(map);
 </code></pre>
 </div>
 
-<p>Looks much better now!</p>
+<p>它看起来更加好看了！</p>
 
 <div id="map3" style="height: 300px"></div>
 
-<h3 id="adding-interaction">Adding Interaction</h3>
+<h3 id="section-4">增加交互</h3>
 
-<p>Now let&#8217;s make the states highlighted visually in some way when they are hovered with a mouse. First we&#8217;ll define an event listener for layer <code class="highlighter-rouge">mouseover</code> event:</p>
+<p>现在让我们把鼠标悬浮在各州上面时高亮它们。首先，我们定义一个<code class="highlighter-rouge">mouseover</code>事件的监听函数：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function highlightFeature(e) {
 	var layer = e.target;
@@ -189,9 +189,9 @@ L.geoJson(statesData, {style: style}).addTo(map);
 </code></pre>
 </div>
 
-<p>Here we get access to the layer that was hovered through <code class="highlighter-rouge">e.target</code>, set a thick grey border on the layer as our highlight effect, also bringing it to the front so that the border doesn&#8217;t clash with nearby states (but not for IE or Opera, since they have problems doing <code class="highlighter-rouge">bringToFront</code> on <code class="highlighter-rouge">mouseover</code>).</p>
+<p>这里我们通过<code class="highlighter-rouge">e.target</code>来获取悬浮的图层信息，在图层中设置一个宽的灰色边界作为高亮的效果，同时把它放置到最前面，以至于边界不会被附近的州所影响（但是在IE好玩Opera中不可以，因为它们处理<code class="highlighter-rouge">mouseover</code>事件中的<code class="highlighter-rouge">bringToFront</code>会带来问题）。</p>
 
-<p>Next we&#8217;ll define what happens on <code class="highlighter-rouge">mouseout</code>:</p>
+<p>下一步，我们将定义<code class="highlighter-rouge">mouseout</code>事件发生的事情：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function resetHighlight(e) {
 	geojson.resetStyle(e.target);
@@ -199,7 +199,7 @@ L.geoJson(statesData, {style: style}).addTo(map);
 </code></pre>
 </div>
 
-<p>The handy <code class="highlighter-rouge">geojson.resetStyle</code> method will reset the layer style to its default state (defined by our <code class="highlighter-rouge">style</code> function). For this to work, make sure our GeoJSON layer is accessible through the <code class="highlighter-rouge">geojson</code> variable by defining it before our listeners and assigning the layer to it later:</p>
+<p><code class="highlighter-rouge">geojson.resetStyle</code>事件处理函数将重置图层样式为默认样式（通过在<code class="highlighter-rouge">style</code>函数中定义）。 为了让这个函数起效，要确保GeoJSON图层是可用的，就要保证在监听之前和把图层赋给<code class="highlighter-rouge">geojson</code>之前，定义好<code class="highlighter-rouge">geojson</code>变量：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var geojson;
 // ... our listeners
@@ -207,7 +207,7 @@ geojson = L.geoJson(...);
 </code></pre>
 </div>
 
-<p>As an additional touch, let&#8217;s define a <code class="highlighter-rouge">click</code> listener that zooms to the state:</p>
+<p>作为可选的触摸事件，我们定义<code class="highlighter-rouge">click</code>监听器来监听各州缩放的改变：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function zoomToFeature(e) {
 	map.fitBounds(e.target.getBounds());
@@ -215,7 +215,7 @@ geojson = L.geoJson(...);
 </code></pre>
 </div>
 
-<p>Now we&#8217;ll use the <code class="highlighter-rouge">onEachFeature</code> option to add the listeners on our state layers:</p>
+<p>现在，我们使用<code class="highlighter-rouge">onEachFeature</code>选项来增加我们各州图层的监听器：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function onEachFeature(feature, layer) {
 	layer.on({
@@ -232,13 +232,12 @@ geojson = L.geoJson(statesData, {
 </code></pre>
 </div>
 
-<p>This makes the states highlight nicely on hover and gives us the ability to add other interactions inside our listeners.</p>
+<p>这样可以使鼠标悬浮时，各州可以高亮显示，从而可以让监听器增加交互的能力。</p>
 
-<h3 id="custom-info-control">Custom Info Control</h3>
+<h3 id="section-5">自定义信息控件</h3>
+<p>我们可以在显示不同州信息的时候使用常规的弹出框，但是也可以选择不同的方式：通过悬浮的<a href="../reference.html#icontrol">自定义控件</a>上显示不同的信息。</p>
 
-<p>We could use the usual popups on click to show information about different states, but we&#8217;ll choose a different route &#8212; showing it on state hover inside a <a href="../reference.html#icontrol">custom control</a>.</p>
-
-<p>Here&#8217;s the code for our control:</p>
+<p>这里是我们控件的代码：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var info = L.control();
 
@@ -259,7 +258,7 @@ info.addTo(map);
 </code></pre>
 </div>
 
-<p>We need to update the control when the user hovers over a state, so we&#8217;ll also modify our listeners as follows:</p>
+<p>当用户悬浮到一个州上的时候，我们需要更新控件，所以我们也需要如下所示修改监听器：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function highlightFeature(e) {
 	...
@@ -273,7 +272,7 @@ function resetHighlight(e) {
 </code></pre>
 </div>
 
-<p>The control also needs some CSS styles to look nice:</p>
+<p>这个控件也需要一些CSS样式，这样看起来更加炫酷：</p>
 
 <div class="css highlighter-rouge"><pre class="highlight"><code>.info {
 	padding: 6px 8px;
@@ -290,9 +289,9 @@ function resetHighlight(e) {
 </code></pre>
 </div>
 
-<h3 id="custom-legend-control">Custom Legend Control</h3>
+<h3 id="section-6">自定义图例控件</h3>
 
-<p>Creating a control with a legend is easier, since it is static and doesn&#8217;t change on state hover. JavaScript code:</p>
+<p>创建一个图例控件是非常容易的，因为它的静态的并且不会改变。JavaScript代码：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var legend = L.control({position: 'bottomright'});
 
@@ -316,7 +315,7 @@ legend.addTo(map);
 </code></pre>
 </div>
 
-<p>CSS styles for the control (we also reuse the <code class="highlighter-rouge">info</code> class defined earlier):</p>
+<p>控件的CSS样式（我们再次使用<code class="highlighter-rouge">info</code>类来定义）：</p>
 
 <div class="css highlighter-rouge"><pre class="highlight"><code>.legend {
 	line-height: 18px;
@@ -332,7 +331,7 @@ legend.addTo(map);
 </code></pre>
 </div>
 
-<p>Enjoy the result on <a href="#map">the top of this page</a> or on a <a href="choropleth-example.html">separate page</a>.</p>
+<p>享受这个教程的结果<a href="#map">回到页面顶部</a>或者打开<a href="choropleth-example.html">单独的页面</a>.</p>
 
 <script src="us-states.js"></script>
 
@@ -464,6 +463,7 @@ legend.addTo(map);
 	legend.addTo(map);
 
 </script>
+
 
 
 

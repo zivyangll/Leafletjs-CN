@@ -55,7 +55,7 @@
 	</li>
 	<li>
 		
-			<a href="../reference.html">文档</a>
+			<a href="../reference-1.0.0.html">文档</a>
 		
 	</li>
 	<li>
@@ -78,66 +78,66 @@
 <div class="container">
 
 
-<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+<p class="tutorials-back"><a href="../examples.html">&larr; 所有教程</a></p>
 
-<h2 id="leaflet-quick-start-guide">Leaflet Quick Start Guide</h2>
+<h2 id="leaflet">Leaflet快速开始</h2>
 
-<p>This step-by-step guide will quickly get you started on Leaflet basics, including setting up a Leaflet map, working with markers, polylines and popups, and dealing with events.</p>
+<p>本教程将一步一步的指导你快速开始Leaflet的基础开发，包括设置一个Leaflet地图、新建一个标志点、绘制线、弹出框以及事件处理。</p>
 
 <div id="mapid" class="mapclass" style="height: 180px"></div>
 
-<p><a href="quick-start-example.html">View example on a separate page &rarr;</a></p>
+<p><a href="quick-start-example.html">单独打开页面查看这个例子 &rarr;</a></p>
 
-<h3 id="preparing-your-page">Preparing your page</h3>
+<h3 id="section">准备你的页面</h3>
 
-<p>Before writing any code for the map, you need to do the following preparation steps on your page:</p>
+<p>在开始写代码之前，你需要完成以下几个步骤来准备你的页面：</p>
 
 <ul>
   <li>
-    <p>Include Leaflet CSS file in the head section of your document:</p>
+    <p>在页面的head标签中添加以下代码来引入CSS文件：</p>
 
     <div class="highlighter-rouge"><pre class="highlight"><code> &lt;link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /&gt;
 </code></pre>
     </div>
   </li>
   <li>
-    <p>Include Leaflet JavaScript file:</p>
+    <p>添加Leaflet JavaScript文件：</p>
 
     <div class="highlighter-rouge"><pre class="highlight"><code> &lt;script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"&gt;&lt;/script&gt;
 </code></pre>
     </div>
   </li>
   <li>
-    <p>Put a <code class="highlighter-rouge">div</code> element with a certain <code class="highlighter-rouge">id</code> where you want your map to be:</p>
+    <p>将id为mapid的div标签放到地图显示的地方：</p>
 
     <div class="highlighter-rouge"><pre class="highlight"><code> &lt;div id="mapid"&gt;&lt;/div&gt;
 </code></pre>
     </div>
   </li>
   <li>
-    <p>Make sure the map container has a defined height, for example by setting it in CSS:</p>
+    <p>确保地图容器有定义好的高度，例如在css文件中添加如下代码：</p>
 
     <pre><code class="css">#mapid { height: 180px; }</code></pre>
   </li>
 </ul>
 
-<p>Now you&#8217;re ready to initialize the map and do some stuff with it.</p>
+<p>现在，你已经完成初始化地图，继续做一些东西吧！</p>
 
-<h3 id="setting-up-the-map">Setting up the map</h3>
+<h3 id="section-1">设置地图</h3>
 
 <div id="mapid1" class="mapclass" style="height: 180px"></div>
 
-<p>Let&#8217;s create a map of the center of London with pretty Mapbox Streets tiles. First we&#8217;ll initialize the map and set its view to our chosen geographical coordinates and a zoom level:</p>
+<p>让我们创建一个中心点在伦敦，使用Mapbox街道瓦片的地图。首先，我们初始化地图，并且设置地图在视窗的中心点和缩放级别：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 </code></pre>
 </div>
 
-<p>By default (as we didn&#8217;t pass any options when creating the map instance), all mouse and touch interactions on the map are enabled, and it has zoom and attribution controls.</p>
+<p>默认情况下（我们创建一个地图实例不使用任何选项），所有的鼠标和触摸事件在地图中都是可用的，并且有缩放级别和属性控制。</p>
 
-<p>Note that <code class="highlighter-rouge">setView</code> call also returns the map object &#8212; most Leaflet methods act like this when they don&#8217;t return an explicit value, which allows convenient jQuery-like method chaining.</p>
+<p>注意，setView函数返回一个地图实例－－大多数Leaflet方法都不返回详细的值，而是像jQuery一样进行链式调用。</p>
 
-<p>Next we&#8217;ll add a tile layer to add to our map, in this case it&#8217;s a Mapbox Streets tile layer. Creating a tile layer usually involves setting the <a href="http://leafletjs.com/reference.html#url-template">URL template</a> for the tile images (get yours at <a href="http://mapbox.com">Mapbox</a>), the attribution text and the maximum zoom level of the layer:</p>
+<p>下一步我们将在地图上增加一个瓦片图层，在这个例子中我们将使用Mapbox街道瓦片图层。创建一个瓦片图层通常涉及到设置<a href="./reference.html#url-template">URL template</a>来使用瓦片图（获得你的瓦片图在<a href="http://mapbox.com">Mapbox</a>），设置的属性还包括属性文本和图层的最大比例尺：</p>
 
 <pre><code class="javascript">L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	attribution: 'Map data &amp;copy; <span class="text-cut" data-cut="[&hellip;]">&lt;a href="http://openstreetmap.org"&gt;OpenStreetMap&lt;/a&gt; contributors, &lt;a href="http://creativecommons.org/licenses/by-sa/2.0/"&gt;CC-BY-SA&lt;/a&gt;, Imagery &copy; &lt;a href="http://mapbox.com"&gt;Mapbox&lt;/a&gt;</span>',
@@ -146,21 +146,21 @@
 	accessToken: '<a href="https://www.mapbox.com/account/apps/">your.mapbox.public.access.token</a>'
 }).addTo(mymap);</code></pre>
 
-<p>Make sure all the code is called after the <code class="highlighter-rouge">div</code> and <code class="highlighter-rouge">leaflet.js</code> inclusion. That&#8217;s it! You have a working Leaflet map now.</p>
+<p>确保所有的代码都在创建div标签和引用leaflet.js之前。这样应该没有什么问题了，你现在应用有一个可以使用的Leaflet地图了。</p>
 
-<p>It&#8217;s worth noting that Leaflet is provider-agnostic, meaning that it doesn&#8217;t enforce a particular choice of providers for tiles, and it doesn&#8217;t even contain a single provider-specific line of code, so you&#8217;re free to use other providers if you need to (we&#8217;d recommend Mapbox though, it looks beautiful).</p>
+<p>值得注意的是，Leaflet底图功能与底图供应商无关，意味着你可以选择你喜欢的瓦片地图供应商。它甚至不包括单一的专有瓦片地图提供商代码，所以你可以自由的使用其他瓦片地图提供商的底图(我们推荐使用Mapbox，它看起来特别漂亮！)。</p>
 
-<h3 id="markers-circles-and-polygons">Markers, circles and polygons</h3>
+<h3 id="section-2">标注点，圆和多边形</h3>
 
 <div id="mapid2" class="mapclass" style="height: 180px"></div>
 
-<p>Besides tile layers, you can easily add other things to your map, including markers, polylines, polygons, circles, and popups. Let&#8217;s add a marker:</p>
+<p>除了瓦片图，你应该轻松的在地图上添加其他东西，包括标注点、线、面、圆和弹出框。让我们添加一个标注点：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var marker = L.marker([51.5, -0.09]).addTo(mymap);
 </code></pre>
 </div>
 
-<p>Adding a circle is the same (except for specifying the radius in meters as a second argument), but lets you control how it looks by passing options as the last argument when creating the object:</p>
+<p>添加一个圆也是通过同样的方式（除了实质半径作为第二个参数），通过最后一个参数来控制圆显示的方式：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var circle = L.circle([51.508, -0.11], 500, {
 	color: 'red',
@@ -170,7 +170,7 @@
 </code></pre>
 </div>
 
-<p>Adding a polygon is as easy:</p>
+<p>添加一个多边形也是如此的容易：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var polygon = L.polygon([
 	[51.509, -0.08],
@@ -180,11 +180,11 @@
 </code></pre>
 </div>
 
-<h3 id="working-with-popups">Working with popups</h3>
+<h3 id="section-3">使用弹出框</h3>
 
 <div id="mapid3" class="mapclass" style="height: 180px"></div>
 
-<p>Popups are usually used when you want to attach some information to a particular object on a map. Leaflet has a very handy shortcut for this:</p>
+<p>当你想给地图中某些特殊的要素贴上标签的时候，通常会使用弹出框。Leaflet有一个非常便捷的方法来处理弹出框：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>marker.bindPopup("&lt;b&gt;Hello world!&lt;/b&gt;&lt;br&gt;I am a popup.").openPopup();
 circle.bindPopup("I am a circle.");
@@ -192,9 +192,9 @@ polygon.bindPopup("I am a polygon.");
 </code></pre>
 </div>
 
-<p>Try clicking on our objects. The <code class="highlighter-rouge">bindPopup</code> method attaches a popup with the specified HTML content to your marker so the popup appears when you click on the object, and the <code class="highlighter-rouge">openPopup</code> method (for markers only) immediately opens the attached popup.</p>
+<p>试试点击这个对象，bindPopup方法将绑定把HTML内容和弹出框绑定到一起。当你点击这个对象之后，bindPopup将马上打开一个弹出框。</p>
 
-<p>You can also use popups as layers (when you need something more than attaching a popup to an object):</p>
+<p>你也可以使用图层的弹出框（当你需要在超过一个对象上使用弹出框的时候）：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var popup = L.popup()
 	.setLatLng([51.5, -0.09])
@@ -203,11 +203,11 @@ polygon.bindPopup("I am a polygon.");
 </code></pre>
 </div>
 
-<p>Here we use <code class="highlighter-rouge">openOn</code> instead of <code class="highlighter-rouge">addTo</code> because it handles automatic closing of a previously opened popup when opening a new one which is good for usability.</p>
+<p>在这里，我们使用openOn代替了addTo方法，因为之前打开的弹出框会自动关闭，新的方法将更加的好用。</p>
 
-<h3 id="dealing-with-events">Dealing with events</h3>
+<h3 id="section-4">处理事件</h3>
 
-<p>Every time something happens in Leaflet, e.g. user clicks on a marker or map zoom changes, the corresponding object sends an event which you can subscribe to with a function. It allows you to react to user interaction:</p>
+<p>每次在Leaflet发生事件，相应的对象都会发送一个事件，例如点击标注点、地图缩放。你可以订阅这个事件，它允许你对用户交互作出反应：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>function onMapClick(e) {
 	alert("You clicked the map at " + e.latlng);
@@ -217,9 +217,9 @@ mymap.on('click', onMapClick);
 </code></pre>
 </div>
 
-<p>Each object has its own set of events &#8212; see <a href="../reference.html">documentation</a> for details. The first argument of the listener function is an event object &#8212; it contains useful information about the event that happened. For example, map click event object (<code class="highlighter-rouge">e</code> in the example above) has <code class="highlighter-rouge">latlng</code> property which is a location at which the click occured.</p>
+<p>每个对象都有自己一系列的事件－－详细请看<a href="../reference.html">文档</a>。监听函数的第一个参数是一个事件对象，它包括有关事件发生的有用信息。例如，地图点击事件对象包括latlng属性，它代表鼠标所点击地图的经纬度。</p>
 
-<p>Let&#8217;s improve our example by using a popup instead of an alert:</p>
+<p>让我们使用弹出框代替alert来改善这个例子。</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var popup = L.popup();
 
@@ -234,9 +234,9 @@ mymap.on('click', onMapClick);
 </code></pre>
 </div>
 
-<p>Try clicking on the map and you will see the coordinates in a popup. <a target="_blank" href="quick-start-example.html">View the full example &rarr;</a></p>
+<p>试图在地图在点击，你将会在弹出框中看到经纬度。<a target="_blank" href="quick-start-example.html">查看整个实例 &rarr;</a></p>
 
-<p>Now you&#8217;ve learned Leaflet basics and can start building map apps straight away! Don&#8217;t forget to take a look at the detailed <a href="../reference.html">documentation</a> or <a href="../examples.html">other examples</a>.</p>
+<p>现在你已经学会的Leaflet的基本用法，并且能够创建一个地图应用。不要忘记查看详细的<a href="../reference.html">文档</a>或者<a href="../examples.html">其他例子</a>。</p>
 
 <script>
 
@@ -259,24 +259,8 @@ mymap.on('click', onMapClick);
 		[51.51, -0.047]
 	]).addTo(mymap).bindPopup("I am a polygon.");
 
-
-	/*var popup = L.popup();
-
-	function onMapClick(e) {
-		popup
-			.setLatLng(e.latlng)
-			.setContent("You clicked the map at " + e.latlng.toString())
-			.openOn(map);
-	}
-
-	map.on('click', onMapClick);*/
-
-
-
 	var mymap1 = L.map('mapid1').setView([51.505, -0.09], 13);
 	L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'mapbox.streets'}).addTo(mymap1);
-
-
 
 	var mymap2 = L.map('mapid2').setView([51.505, -0.09], 13);
 	L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'mapbox.streets'}).addTo(mymap2);
@@ -316,6 +300,7 @@ mymap.on('click', onMapClick);
 	]).addTo(mymap3).bindPopup("I am a polygon.");
 
 </script>
+
 
 
 

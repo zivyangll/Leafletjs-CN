@@ -55,7 +55,7 @@
 	</li>
 	<li>
 		
-			<a href="../../reference.html">文档</a>
+			<a href="../../reference-1.0.0.html">文档</a>
 		
 	</li>
 	<li>
@@ -78,7 +78,7 @@
 <div class="container">
 
 
-<p class="tutorials-back"><a href="../../examples.html">&larr; Tutorials</a></p>
+<p class="tutorials-back"><a href="../../examples.html">&larr; 所有教程</a></p>
 
 <style>
 iframe {
@@ -87,17 +87,17 @@ iframe {
 }
 </style>
 
-<h2 id="not-of-this-earth">Not of this earth</h2>
+<h2 id="section">没有地理信息的地图</h2>
 
-<p>Sometimes, maps do not represent things on the surface of the earth and, as such, do not have a concept of geographical latitude and geographical longitude. Most times this refers to big scanned images, such as game maps.</p>
+<p>有时，地图并不只是呈现地球表面上的东西，例如呈现一些没有经纬度概念的东西。这些情况中的大多数是呈现一个很大的图片，例如游戏地图。</p>
 
-<p>For this tutorial we&#8217;ve picked a starmap from Star Control II, a game that is now available as the <a href="https://en.wikipedia.org/wiki/Star_Control_II#The_Ur-Quan_Masters">open-source project The Ur-Quan Masters</a>. These maps were made with a <a href="http://www.highprogrammer.com/alan/games/video/uqm/index.html">tool to read the open-source data files</a> of the game, and look like this:</p>
+<p>在这个教程中，我们使用星际2的游戏地图，这个游戏在<a href="https://en.wikipedia.org/wiki/Star_Control_II#The_Ur-Quan_Masters">开源项目Ur-Quan Masters</a>中仍然是可玩的。这些游戏地图通过<a href="http://www.highprogrammer.com/alan/games/video/uqm/index.html">开源数据文件阅读工具</a>制作，看起来就像这样：</p>
 
 <center>
 <img src="uqm_map_400px.png" style="border: 1px solid #ccc; border-radius: 5px" /><br />
 </center>
 
-<p>The game has a built-in square coordinate system, as can be seen in the corners. This will allow us to establish a coordinate system.</p>
+<p>这个游戏构建在一个方形的坐标系统中，这将允许我们为它创建一个坐标系。</p>
 
 <center>
 <img src="uqm_map_detail.png" style="border: 1px solid #ccc; border-radius: 5px" /><br />
@@ -105,9 +105,9 @@ iframe {
 
 <h2 id="crssimple">CRS.Simple</h2>
 
-<p><strong>CRS</strong> stands for <a href="https://en.wikipedia.org/wiki/Spatial_reference_system">coordinate reference system</a>, a term used by geographers to explain what the coordinates mean in a coordinate vector. For example, <code class="highlighter-rouge">[15, 60]</code> represents a point in the Indian Ocean if using latitude-longitude on the earth, or the solar system Krueger-Z in our starmap.</p>
+<p><strong>CRS</strong>是<a href="https://en.wikipedia.org/wiki/Spatial_reference_system">coordinate reference system</a>的缩写，一个由地理学家组成团队，解释了坐标系在矢量坐标中的含义。例如，如果使用经纬度的话，<code class="highlighter-rouge">[15, 60]</code>代表了在地球上印度洋中的一个点, 或者在我们星系中太阳系中的Krueger-Z。</p>
 
-<p>A Leaflet map has one CRS (and <em>one</em> CRS <em>only</em>), that can be changed when creating the map. For our game map we&#8217;ll use <code class="highlighter-rouge">CRS.Simple</code>, which represents a square grid:</p>
+<p>Leaflet地图之友一个坐标系，在创建地图的时候可以改变它。我们在游戏地图中将使用<code class="highlighter-rouge">CRS.Simple</code>，它代表一个方形网格：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var map = L.map('map', {
 	crs: L.CRS.Simple
@@ -115,14 +115,14 @@ iframe {
 </code></pre>
 </div>
 
-<p>Then we can just add a <code class="highlighter-rouge">L.ImageOverlay</code> with the starmap image and its <em>approximate</em> bounds:</p>
+<p>然后我们仅仅使用<code class="highlighter-rouge">L.ImageOverlay</code>增加游戏星系图，并设置它的<em>大致</em>的边界：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var bounds = [[0,0], [1000,1000]];
 var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
 </code></pre>
 </div>
 
-<p>And show the whole map:</p>
+<p>然后显示整个地图：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>map.fitBounds(bounds);
 </code></pre>
@@ -133,16 +133,16 @@ var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
 <iframe src="crs-simple-example1.html" width="616" height="416"></iframe>
 </td></tr>
 <tr><td style="text-align: center; border: none">
-<small><a href="crs-simple-example1.html">See this example stand-alone.</a></small>
+<small><a href="crs-simple-example1.html">单独打开页面查看这个例子 &rarr;</a></small>
 </td></tr></table>
 
-<p>This example doesn&#8217;t quite work, as we cannot see the whole map after doing a <code class="highlighter-rouge">fitBounds()</code>.</p>
+<p>这个例子不能很好的工作，因为我们在使用了<code class="highlighter-rouge">fitBounds()</code>之后不能很好的看全整个地图。</p>
 
-<h2 id="common-gotchas-in-crssimple-maps">Common gotchas in CRS.Simple maps</h2>
+<h2 id="crssimple-1">在CRS.Simple地图中的常见问题</h2>
 
-<p>In the default Leaflet CRS, <code class="highlighter-rouge">CRS.Earth</code>, 360 degrees of longitude are mapped to 256 horizontal pixels (at zoom level 0) and approximately 170 degrees of latitude are mapped to 256 vertical pixels (at zoom level 0).</p>
+<p>Leaflet坐标系默认是<code class="highlighter-rouge">CRS.Earth</code>，360度经度在地图上被划分为256个水平像素（在缩放级别为0的时候）, 大约170度纬度在地图上被划分为256个垂直像素（在缩放级别为0的时候）。</p>
 
-<p>In a <code class="highlighter-rouge">CRS.Simple</code>, one horizontal map unit is mapped to one horizontal pixel, and <em>idem</em> with vertical. This means that the whole map is about 1000x1000 pixels big and won&#8217;t fit in our HTML container. Luckily, we can set <code class="highlighter-rouge">minZoom</code> to values lower than zero:</p>
+<p>在<code class="highlighter-rouge">CRS.Simple</code>中，一个水平的地图单位被划分为一个水平的像素，垂直的情况也一样。这意味着整个地图被划分为1000x1000像素的大小，并超出外部的HTML容器。幸运的是，我们可以设置<code class="highlighter-rouge">minZoom</code>为比0更小的值：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var map = L.map('map', {
 	crs: L.CRS.Simple,
@@ -151,18 +151,18 @@ var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
 </code></pre>
 </div>
 
-<h3 id="pixels-vs-map-units">Pixels vs. map units</h3>
+<h3 id="vs-">像素 VS 地图单位</h3>
 
-<p>One common mistake when using <code class="highlighter-rouge">CRS.Simple</code> is assuming that the map units equal image pixels. In this case, the map covers 1000x1000 units, but the image is 2315x2315 pixels big. Different cases will call for one pixel = one map unit, or 64 pixels = one map unit, or anything. <strong>Think in map units</strong> in a grid, and then add your layers (<code class="highlighter-rouge">L.ImageOverlay</code>s, <code class="highlighter-rouge">L.Marker</code>s and so on) accordingly.</p>
+<p>一个常见的错误是使用<code class="highlighter-rouge">CRS.Simple</code>的时候，假设地图单位等于图片像素。在这种情况下，地图转换为1000x1000的单位，但是图片却有2315x2315像素这么大。有些情况下，一个像素等于一个地图单位；有些情况下，64个像素等于一个地图单位。考虑在网格中的<strong>地图单位</strong>，然后适当的添加你的图层（<code class="highlighter-rouge">L.ImageOverlay</code>或者<code class="highlighter-rouge">L.Marker</code>等）。</p>
 
-<p>In fact, the image we&#8217;re using covers more than 1000 map units - there is a sizable margin. Measuring how many pixels there are between the 0 and 1000 coordinates, and extrapolating, we can have the right coordinate bounds for this image:</p>
+<p>事实上，我们使用的图像超过了1000个地图单位，因为有相当大的边界。通过测量在0到1000坐标中有多少像素点，我们能够在图片中正确的使用坐标边界：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var bounds = [[-26.5,-25], [1021.5,1023]];
 var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
 </code></pre>
 </div>
 
-<p>While we&#8217;re at it, let&#8217;s add some markers:</p>
+<p>当我们完成它之后，添加几个标注点：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var sol = L.latLng([ 145, 175.2 ]);
 L.marker(sol).addTo(map);
@@ -175,18 +175,18 @@ map.setView( [70, 120], 1);
 <iframe src="crs-simple-example2.html" width="616" height="416"></iframe>
 </td></tr>
 <tr><td style="text-align: center; border: none">
-<small><a href="crs-simple-example2.html">See this example stand-alone.</a></small>
+<small><a href="crs-simple-example2.html">单独打开页面查看这个例子 &rarr;</a></small>
 </td></tr></table>
 
-<h3 id="this-is-not-the-latlng-youre-looking-for">This is not the <code class="highlighter-rouge">LatLng</code> you&#8217;re looking for</h3>
+<h3 id="latlng">这里没有<code class="highlighter-rouge">LatLng</code></h3>
 
-<p>You&#8217;ll notice that Sol is at coordinates <code class="highlighter-rouge">[145,175]</code> instead of <code class="highlighter-rouge">[175,145]</code>, and the same happens with the map center. Coordinates in <code class="highlighter-rouge">CRS.Simple</code> take the form of <code class="highlighter-rouge">[y, x]</code> instead of <code class="highlighter-rouge">[x, y]</code>, in the same way Leaflet uses <code class="highlighter-rouge">[lat, lng]</code> instead of <code class="highlighter-rouge">[lng, lat]</code>.</p>
+<p>你将注意到Sol的坐标为<code class="highlighter-rouge">[145,175]</code>，而不是<code class="highlighter-rouge">[175,145]</code>，同样这也发生在地图中心点上。<code class="highlighter-rouge">CRS.Simple</code>坐标系采用<code class="highlighter-rouge">[y, x]</code>来代替<code class="highlighter-rouge">[x, y]</code>，同样在Leaflet中也采用<code class="highlighter-rouge">[lat, lng]</code>来代替<code class="highlighter-rouge">[lng, lat]</code>。</p>
 
-<p><small>(In technical terms, Leaflet prefers to use <a href="https://en.wikipedia.org/wiki/Easting_and_northing"><code class="highlighter-rouge">[northing, easting]</code></a> over <code class="highlighter-rouge">[easting, northing]</code> - the first coordinate in a coordinate pair points &#8220;north&#8221; and the second points &#8220;east&#8221;)</small></p>
+<p><small>(在技术方面，Leaflet倾向于使用<a href="https://en.wikipedia.org/wiki/Easting_and_northing"><code class="highlighter-rouge">[northing, easting]</code></a>来代替<code class="highlighter-rouge">[easting, northing]</code>－－第一个坐标点是&#8221;north&#8221;坐标对，第二个是&#8221;east&#8221;坐标对)</small></p>
 
-<p>The debate about whether <code class="highlighter-rouge">[lng, lat]</code> or <code class="highlighter-rouge">[lat, lng]</code> or <code class="highlighter-rouge">[y, x]</code> or <code class="highlighter-rouge">[x, y]</code> <a href="http://www.macwright.org/lonlat/">is not new, and there is no clear consensus</a>. This lack of consensus is why Leaflet has a class named <code class="highlighter-rouge">L.LatLng</code> instead of the more confusion-prone <code class="highlighter-rouge">L.Coordinate</code>.</p>
+<p>关于使用<code class="highlighter-rouge">[lng, lat]</code>或者<code class="highlighter-rouge">[lat, lng]</code>或者<code class="highlighter-rouge">[y, x]</code>或者<code class="highlighter-rouge">[x, y]</code> <a href="http://www.macwright.org/lonlat/">已经不是新问题了，并且没有一个清楚的统一意见</a>。这就是为什么Leaflet把类名<code class="highlighter-rouge">L.LatLng</code>替换为<code class="highlighter-rouge">L.Coordinate</code>的原因。</p>
 
-<p>If working with <code class="highlighter-rouge">[y, x]</code> coordinates with something named <code class="highlighter-rouge">L.LatLng</code> doesn&#8217;t make much sense to you, you can easily create wrappers for them:</p>
+<p>如果使用命名为<code class="highlighter-rouge">L.LatLng</code>的<code class="highlighter-rouge">[y, x]</code>坐标对你来说很困惑的话，那么把她包装一下会更加的容易：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var yx = L.latLng;
 
@@ -199,7 +199,7 @@ var xy = function(x, y) {
 </code></pre>
 </div>
 
-<p>Now we can add a few stars and even a navigation line with <code class="highlighter-rouge">[x, y]</code> coordinates:</p>
+<p>现在我们使用<code class="highlighter-rouge">[x, y]</code>坐标添加一些星星和一条导航线：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var sol      = xy(175.2, 145.0);
 var mizar    = xy( 41.6, 130.1);
@@ -215,15 +215,16 @@ var travel = L.polyline([sol, deneb]).addTo(map);
 </code></pre>
 </div>
 
-<p>The map looks pretty much the same, but the code is a bit more readable:</p>
+<p>现在地图看起来一样棒，但是代码更加容易阅读了。</p>
 
 <table>
 <tr><td style="text-align: center; border: none">
 <iframe src="crs-simple-example3.html" width="616" height="416"></iframe>
 </td></tr>
 <tr><td style="text-align: center; border: none">
-<small><a href="crs-simple-example3.html">See this example stand-alone.</a></small>
+<small><a href="crs-simple-example3.html">单独打开页面查看这个例子 &rarr;</a></small>
 </td></tr></table>
+
 
 
 

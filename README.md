@@ -3,7 +3,7 @@
 
 Leaflet官方网站：http://www.leafletjs.com
 <br/>
-leaflet中文网站：http://www.leafletjs.com.cn
+Leaflet中文网站：http://www.leafletjs.com.cn
 
 <img src="http://leafletjs.com/docs/images/logo.png" alt="Leaflet" />
 
@@ -16,9 +16,8 @@ Leaflet设计的非常<em>简单易懂</em>, 同时具有很好的<em>性能</em
 
 Leaflet有大量的<a href="plugins.html">插件</a>用于扩张Leaflet的功能。还有相当棒的API用户文档和易读的<a title="Leaflet source code repository on GitHub" href="https://github.com/Leaflet/Leaflet">源码</a>。
 
-阅读更多信息，请查看[official website][ http://leafletjs.com]。<br>
-**下载Leaflet**，请查看下载页面[download page][http://leafletjs.com/download.html].
-
+阅读更多信息，请查看[official website](http://leafletjs.com)。<br>
+**下载Leaflet**，请查看下载页面[download page](http://leafletjs.com/download.html)。
 我们非常期待新的贡献者加入。
 你可以参与其中<a title="A guide to contributing to Leaflet" href="https://github.com/Leaflet/Leaflet/blob/master/CONTRIBUTING.md">贡献</a> 自己的力量！
 

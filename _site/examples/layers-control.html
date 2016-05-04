@@ -55,7 +55,7 @@
 	</li>
 	<li>
 		
-			<a href="../reference.html">文档</a>
+			<a href="../reference-1.0.0.html">文档</a>
 		
 	</li>
 	<li>
@@ -78,19 +78,19 @@
 <div class="container">
 
 
-<p class="tutorials-back"><a href="../examples.html">&larr; Tutorials</a></p>
+<p class="tutorials-back"><a href="../examples.html">&larr; 所有教程</a></p>
 
-<h2 id="layer-groups-and-layers-control">Layer Groups and Layers Control</h2>
+<h2 id="section">图层分组和图层控制</h2>
 
-<p>This tutorial will show you how to group several layers into one, and how to use the layers control to allow users to easily switch different layers on your map.</p>
+<p>这个教程将告诉你如何管理地图图层，并且如何使用图层切换控件轻松的切换地图上的不同图层。</p>
 
 <div id="map" class="map" style="height: 250px"></div>
 
-<p><a href="layers-control-example.html">View example on a separate page &rarr;</a></p>
+<p><a href="layers-control-example.html">单独打开页面查看这个例子 &rarr;</a></p>
 
-<h3 id="layer-groups">Layer Groups</h3>
+<h3 id="section-1">图层组</h3>
 
-<p>Let&#8217;s suppose you have a bunch of layers you want to combine into a group to handle them as one in your code:</p>
+<p>将一系列的图层合并到一个图层组中，代码如下所示：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
 	denver    = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
@@ -99,19 +99,19 @@
 </code></pre>
 </div>
 
-<p>Instead of adding them directly to the map, you can do the following, using the <a href="http://leafletjs.com/reference.html#layergroup">LayerGroup</a> class:</p>
+<p>与将它们直接放入地图中相反，通过使用<a href="http://leafletjs.com/reference.html#layergroup">LayerGroup</a>类来实现图层类：</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>var cities = L.layerGroup([littleton, denver, aurora, golden]);
 </code></pre>
 </div>
 
-<p>Easy enough! Now you have a <code class="highlighter-rouge">cities</code> layer that combines your city markers into one layer you can add or remove from the map at once.</p>
+<p>非常简单吧！现在合并城市标注点到一个<code class="highlighter-rouge">cities</code>图层，从而可以每次在地图中添加或者移除该图层了。</p>
 
-<h3 id="layers-control">Layers Control</h3>
+<h3 id="section-2">图层控制</h3>
 
-<p>Leaflet has a nice little control that allows your users control what layers they want to see on your map. In addition to showing you how to use it, we&#8217;ll show another handy use for layer groups.</p>
+<p>Leaflet有一个非常好用的小控件，这个控件能让用户控制图层以便在地图上看到。除了如何使用，我们还示范另一个便捷的图层组功能。</p>
 
-<p>There are two types of layers &#8212; base layers that are mutually exclusive (only one can be visible on your map), e.g. tile layers, and overlays &#8212; all the other stuff you put over the base layers. In this example, we want to have two base layers (grayscale and night-style base map) to switch between, and an overlay to switch on and off &#8212; city markers (those we created earlier). Let&#8217;s create those layers and add the default ones to the map:</p>
+<p>一共有两类图层。底图：是有交互的封闭性图层（只有该图层在用户的地图上能被看到），例如瓦片图层。另一种是覆盖物图层：放置在底图上用户的东西。在这个例子中，我们使用两类底图（灰色底图和深色风格底图）来彼此转换，使用一个覆盖物作为城市标记（我们之前创建的）的开关。我们创建这些图层，并添加默认一个到地图中：</p>
 
 <pre><code>var grayscale = L.tileLayer(mapboxUrl, {id: '<a href="https://mapbox.com">MapID</a>', attribution: mapboxAttribution}),
 	streets   = L.tileLayer(mapboxUrl, {id: '<a href="https://mapbox.com">MapID</a>', attribution: mapboxAttribution});
@@ -122,7 +122,7 @@ var map = L.map('map', {
 	layers: [grayscale, cities]
 });</code></pre>
 
-<p>Next, we&#8217;ll create two objects. One will contain our base layers and one will contain our overlays. These are just simple objects with key/value pairs. The key is what sets the text for the layer in the control (e.g. &#8220;Streets&#8221;). The corresponding value is a reference to the layer (e.g. <code class="highlighter-rouge">streets</code>).</p>
+<p>接下来，我们将创建两个对象。一个将包括我们的底图，一个将包括我们的覆盖物图层。这些对象里是一些简单的键值对。键是控件中显示的文本信息，例如&#8221;Streets&#8221;。相关的值是反映在图层中的值，例如<code class="highlighter-rouge">streets</code>。</p>
 
 <pre><code>var baseMaps = {
 	"Grayscale": grayscale,
@@ -133,15 +133,15 @@ var overlayMaps = {
     "Cities": cities
 };</code></pre>
 
-<p>Now, all that&#8217;s left to do is to create a <a href="../reference.html#control-layers">Layers Control</a> and add it to the map. The first argument passed when creating the layers control is the base layers object. The second argument is the overlays object. Both arguments are optional &#8212; for example, you can pass just a base layers object by omitting the second argument, or just an overlays objects by passing <code class="highlighter-rouge">null</code> as the first argument.</p>
+<p>现在，就剩下创建一个<a href="../reference.html#control-layers">图层控制器</a>并把它添加到地图中。创建图层控制器的第一个参数是底图图层对象，第二个参数是覆盖物图层对象。两个参数都是可选的，例如，你可以缺省第二个参数，只填第一个参数；也可以只填覆盖物对象，把第一个参数填为null。</p>
 
 <pre><code>L.control.layers(baseMaps, overlayMaps).addTo(map);</code></pre>
 
-<p>Note that we added <code class="highlighter-rouge">grayscale</code> and <code class="highlighter-rouge">cities</code> layers to the map but didn&#8217;t add <code class="highlighter-rouge">streets</code>. The layers control is smart enough to detect what layers we&#8217;ve already added and have corresponding checkboxes and radioboxes set.</p>
+<p>注意我们把<code class="highlighter-rouge">grayscale</code>和<code class="highlighter-rouge">cities</code>图层添加到地图中，并没有添加<code class="highlighter-rouge">streets</code>图层。图层控制器非常的聪明，能够探测到我们已经在地图上加载的图层以及相关的选项集。</p>
 
-<p>Also note that when using multiple base layers, only one of them should be added to the map at instantiation, but all of them should be present in the base layers object when creating the layers control.</p>
+<p>还需要注意的是当使用多个底图图层的时候，仅仅只有一个底图能够作为实例添加到地图中，但是在创建地图控制器的时候，这些所有的底图都需要作为底图图层对象这个参数。</p>
 
-<p>Now let&#8217;s <a href="layers-control-example.html">view the result on a separate page &rarr;</a></p>
+<p>现在，让我们<a href="layers-control-example.html">单独打开页面查看这个例子 &rarr;</a>。</p>
 
 <script>
 	var cities = new L.LayerGroup();
@@ -171,6 +171,7 @@ var overlayMaps = {
 
 	L.control.layers(baseLayers, overlays).addTo(map);
 </script>
+
 
 
 

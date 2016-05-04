@@ -10,17 +10,17 @@ iframe {
 }
 </style>
 
-## Not of this earth
+## 没有地理信息的地图
 
-Sometimes, maps do not represent things on the surface of the earth and, as such, do not have a concept of geographical latitude and geographical longitude. Most times this refers to big scanned images, such as game maps.
+有时，地图并不只是呈现地球表面上的东西，例如呈现一些没有经纬度概念的东西。这些情况中的大多数是呈现一个很大的图片，例如游戏地图。
 
-For this tutorial we've picked a starmap from Star Control II, a game that is now available as the [open-source project The Ur-Quan Masters](https://en.wikipedia.org/wiki/Star_Control_II#The_Ur-Quan_Masters). These maps were made with a [tool to read the open-source data files](http://www.highprogrammer.com/alan/games/video/uqm/index.html) of the game, and look like this:
+在这个教程中，我们使用星际2的游戏地图，这个游戏在[开源项目Ur-Quan Masters](https://en.wikipedia.org/wiki/Star_Control_II#The_Ur-Quan_Masters)中仍然是可玩的。这些游戏地图通过[开源数据文件阅读工具](http://www.highprogrammer.com/alan/games/video/uqm/index.html)制作，看起来就像这样：
 
 <center>
 <img src="uqm_map_400px.png" style="border: 1px solid #ccc; border-radius: 5px" /><br/>
 </center>
 
-The game has a built-in square coordinate system, as can be seen in the corners. This will allow us to establish a coordinate system.
+这个游戏构建在一个方形的坐标系统中，这将允许我们为它创建一个坐标系。
 
 <center>
 <img src="uqm_map_detail.png" style="border: 1px solid #ccc; border-radius: 5px" /><br/>
@@ -29,49 +29,49 @@ The game has a built-in square coordinate system, as can be seen in the corners.
 
 ## CRS.Simple
 
-**CRS** stands for [coordinate reference system](https://en.wikipedia.org/wiki/Spatial_reference_system), a term used by geographers to explain what the coordinates mean in a coordinate vector. For example, `[15, 60]` represents a point in the Indian Ocean if using latitude-longitude on the earth, or the solar system Krueger-Z in our starmap.
+**CRS**是[coordinate reference system](https://en.wikipedia.org/wiki/Spatial_reference_system)的缩写，一个由地理学家组成团队，解释了坐标系在矢量坐标中的含义。例如，如果使用经纬度的话，`[15, 60]`代表了在地球上印度洋中的一个点, 或者在我们星系中太阳系中的Krueger-Z。
 
-A Leaflet map has one CRS (and *one* CRS *only*), that can be changed when creating the map. For our game map we'll use `CRS.Simple`, which represents a square grid:
+Leaflet地图之友一个坐标系，在创建地图的时候可以改变它。我们在游戏地图中将使用`CRS.Simple`，它代表一个方形网格：
 
 	var map = L.map('map', {
 		crs: L.CRS.Simple
 	});
 
-Then we can just add a `L.ImageOverlay` with the starmap image and its *approximate* bounds:
+然后我们仅仅使用`L.ImageOverlay`增加游戏星系图，并设置它的*大致*的边界：
 
 	var bounds = [[0,0], [1000,1000]];
 	var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
 
-And show the whole map:
+然后显示整个地图：
 
 	map.fitBounds(bounds);
 
 {% include frame.html url="crs-simple-example1.html" %}
 
-This example doesn't quite work, as we cannot see the whole map after doing a `fitBounds()`.
+这个例子不能很好的工作，因为我们在使用了`fitBounds()`之后不能很好的看全整个地图。
 
 
-## Common gotchas in CRS.Simple maps
+## 在CRS.Simple地图中的常见问题
 
-In the default Leaflet CRS, `CRS.Earth`, 360 degrees of longitude are mapped to 256 horizontal pixels (at zoom level 0) and approximately 170 degrees of latitude are mapped to 256 vertical pixels (at zoom level 0).
+Leaflet坐标系默认是`CRS.Earth`，360度经度在地图上被划分为256个水平像素（在缩放级别为0的时候）, 大约170度纬度在地图上被划分为256个垂直像素（在缩放级别为0的时候）。 
 
-In a `CRS.Simple`, one horizontal map unit is mapped to one horizontal pixel, and *idem* with vertical. This means that the whole map is about 1000x1000 pixels big and won't fit in our HTML container. Luckily, we can set `minZoom` to values lower than zero:
+在`CRS.Simple`中，一个水平的地图单位被划分为一个水平的像素，垂直的情况也一样。这意味着整个地图被划分为1000x1000像素的大小，并超出外部的HTML容器。幸运的是，我们可以设置`minZoom`为比0更小的值：
 
 	var map = L.map('map', {
 		crs: L.CRS.Simple,
 		minZoom: -5
 	});
 
-### Pixels vs. map units
+### 像素 VS 地图单位
 
-One common mistake when using `CRS.Simple` is assuming that the map units equal image pixels. In this case, the map covers 1000x1000 units, but the image is 2315x2315 pixels big. Different cases will call for one pixel = one map unit, or 64 pixels = one map unit, or anything. **Think in map units** in a grid, and then add your layers (`L.ImageOverlay`s, `L.Marker`s and so on) accordingly.
+一个常见的错误是使用`CRS.Simple`的时候，假设地图单位等于图片像素。在这种情况下，地图转换为1000x1000的单位，但是图片却有2315x2315像素这么大。有些情况下，一个像素等于一个地图单位；有些情况下，64个像素等于一个地图单位。考虑在网格中的**地图单位**，然后适当的添加你的图层（`L.ImageOverlay`或者`L.Marker`等）。
 
-In fact, the image we're using covers more than 1000 map units - there is a sizable margin. Measuring how many pixels there are between the 0 and 1000 coordinates, and extrapolating, we can have the right coordinate bounds for this image:
+事实上，我们使用的图像超过了1000个地图单位，因为有相当大的边界。通过测量在0到1000坐标中有多少像素点，我们能够在图片中正确的使用坐标边界：
 
 	var bounds = [[-26.5,-25], [1021.5,1023]];
 	var image = L.imageOverlay('uqm_map_full.png', bounds).addTo(map);
 
-While we're at it, let's add some markers:
+当我们完成它之后，添加几个标注点：
 
 	var sol = L.latLng([ 145, 175.2 ]);
 	L.marker(sol).addTo(map);
@@ -79,15 +79,15 @@ While we're at it, let's add some markers:
 
 {% include frame.html url="crs-simple-example2.html" %}
 
-### This is not the `LatLng` you're looking for
+### 这里没有`LatLng`
 
-You'll notice that Sol is at coordinates `[145,175]` instead of `[175,145]`, and the same happens with the map center. Coordinates in `CRS.Simple` take the form of `[y, x]` instead of `[x, y]`, in the same way Leaflet uses `[lat, lng]` instead of `[lng, lat]`.
+你将注意到Sol的坐标为`[145,175]`，而不是`[175,145]`，同样这也发生在地图中心点上。`CRS.Simple`坐标系采用`[y, x]`来代替`[x, y]`，同样在Leaflet中也采用`[lat, lng]`来代替`[lng, lat]`。
 
-<small>(In technical terms, Leaflet prefers to use [`[northing, easting]`](https://en.wikipedia.org/wiki/Easting_and_northing) over `[easting, northing]` - the first coordinate in a coordinate pair points "north" and the second points "east")</small>
+<small>(在技术方面，Leaflet倾向于使用[`[northing, easting]`](https://en.wikipedia.org/wiki/Easting_and_northing)来代替`[easting, northing]`－－第一个坐标点是"north"坐标对，第二个是"east"坐标对)</small>
 
-The debate about whether `[lng, lat]` or `[lat, lng]` or `[y, x]` or `[x, y]` [is not new, and there is no clear consensus](http://www.macwright.org/lonlat/). This lack of consensus is why Leaflet has a class named `L.LatLng` instead of the more confusion-prone `L.Coordinate`.
+关于使用`[lng, lat]`或者`[lat, lng]`或者`[y, x]`或者`[x, y]` [已经不是新问题了，并且没有一个清楚的统一意见](http://www.macwright.org/lonlat/)。这就是为什么Leaflet把类名`L.LatLng`替换为`L.Coordinate`的原因。
 
-If working with `[y, x]` coordinates with something named `L.LatLng` doesn't make much sense to you, you can easily create wrappers for them:
+如果使用命名为`L.LatLng`的`[y, x]`坐标对你来说很困惑的话，那么把她包装一下会更加的容易：
 
 	var yx = L.latLng;
 
@@ -98,7 +98,7 @@ If working with `[y, x]` coordinates with something named `L.LatLng` doesn't mak
 		return yx(y, x);  // When doing xy(x, y);
 	};
 
-Now we can add a few stars and even a navigation line with `[x, y]` coordinates:
+现在我们使用`[x, y]`坐标添加一些星星和一条导航线：
 
 	var sol      = xy(175.2, 145.0);
 	var mizar    = xy( 41.6, 130.1);
@@ -112,6 +112,6 @@ Now we can add a few stars and even a navigation line with `[x, y]` coordinates:
 
 	var travel = L.polyline([sol, deneb]).addTo(map);
 
-The map looks pretty much the same, but the code is a bit more readable:
+现在地图看起来一样棒，但是代码更加容易阅读了。
 
 {% include frame.html url="crs-simple-example3.html" %}

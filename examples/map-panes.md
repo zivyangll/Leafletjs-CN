@@ -3,26 +3,25 @@ layout: tutorial
 title: Working with map panes
 ---
 
-## What are panes?
+## 什么是地图分层？
 
-In Leaflet, map panes group layers together implicitly, without the developer knowing about it. This grouping allows web browsers to work with several layers at once in a more efficient way than working with layers individually.
+在Leaflet中，地图分层是隐式的，不需要开发者了解它。分层允许浏览器在多个图层上表现的比单独处理各个图层要高效的多。
 
-Map panes use the [z-index CSS property](https://developer.mozilla.org/docs/Web/CSS/z-index) to always show some layers on top of others. The [default order](http://leafletjs.com/reference.html#map-panes) is:
+地图分层使用[CSS属性z-index](https://developer.mozilla.org/docs/Web/CSS/z-index) 来允许一些图层位于其他图层的顶部。[默认顺序](http://leafletjs.com/reference.html#map-panes)是:
 
-* `TileLayer`s and `GridLayer`s
-* `Path`s, like lines, polylines, circles, or `GeoJSON` layers.
-* `Marker` shadows
-* `Marker` icons
-* `Popup`s
+* 瓦片图层和网格图层
+* 路径，类似于直线、折线、圆或者`GeoJSON`图层。
+* 标志点阴影
+* 标志点图标
+* 弹出框
 
-This is why, in Leaflet maps, popups always show "on top" of other layers, markers always show on top of tile layers, etc.
+这就是为什么在Leaflet地图中，弹出框总是位于其他图层的顶部，标注点总是在瓦片图层的上面。
 
-A new feature of **Leaflet 1.0.0** (not present in 0.7.x) is custom map panes, which allows for customization of this order.
+在**Leaflet 1.0.0**版本中有一个新的特性就是自定义地图分层顺序。
 
-## The default is not always right
+## 默认并不总是正确的
 
-In some particular cases, the default order is not the right one for the map. We can demonstrate this with the [CartoDB basemaps](https://cartodb.com/basemaps/) and labels:
-
+在一些特别的案例中，默认地图分层顺序并不总是正确的。我们可以[CartoDB底图](https://cartodb.com/basemaps/)和标签来证明：
 
 <style>
 .tiles img {
@@ -49,7 +48,7 @@ Labels on top of basemap
 </div>
 </div>
 
-If we create a Leaflet map with these two tile layers, any marker or polygon will show on top of both, but having the labels on top [looks much nicer](http://blog.cartodb.com/let-your-labels-shine/). How can we do that?
+如果我们使用两个瓦片图创建了Leaflet地图，任何的多边形和标签都应该显示在顶部，但是只有标签显示在顶部[看起来会更好](http://blog.cartodb.com/let-your-labels-shine/)我们怎么做到的？
 
 
 <div id="map" class="map" style="height: 250px"></div>
@@ -89,30 +88,28 @@ geojson.eachLayer(function (layer) {
 map.setView({ lat: 47.040182144806664, lng: 9.667968750000002 }, 4);
 </script>
 
-## Custom pane
+## 自定义分层
 
-We can use the defaults for the basemap tiles and some overlays like GeoJSON layers, but we have to define a custom pane for the labels, so they show on top of the GeoJSON data.
+我们可以使用默认的瓦片底图和一些覆盖物图层，类似与GeoJSON图层。但是我们不得不为标注图层定义地图分层顺序，从而使它可以显示在GeoJSON数据的顶部。
 
-Custom map panes are created on a per-map basis, so first create an instance of `L.Map` and the pane:
+自定义地图分层使用一个per-map创建，所以首先应该创建一个`L.Map`实例和pane：
 
 
     var map = L.map('map');
     map.createPane('labels');
 
-
-The next step is setting the z-index of the pane. Looking at the [defaults](https://github.com/Leaflet/Leaflet/blob/master/dist/leaflet.css#L73), a value of 650 will make the `TileLayer` with the labels show on top of markers but below pop-ups. By using `getPane()`, we have a reference to the [`HTMLElement`](https://developer.mozilla.org/docs/Web/API/HTMLElement) representing the pane, and change its z-index:
+下一步就是设置分层的z-index。查看[默认值](https://github.com/Leaflet/Leaflet/blob/master/dist/leaflet.css#L73)，650的z-index值将会带有注记的`TileLayer`图层位于所有标注点的顶部，但是在弹出框的下面。通过使用`getPane()`函数，我们引用[`HTMLElement`](https://developer.mozilla.org/docs/Web/API/HTMLElement)代表分层，从而通过改变z-index来改变顺序：
 
 
     map.getPane('labels').style.zIndex = 650;
 
-
-One of the problems of having image tiles on top of other map layers is that the tiles will capture clicks and touches. If a user clicks anywhere on the map, the web browser will assume she clicked on the labels tiles, and not on the GeoJSON or on the markers. This can be solved using [the `pointer-events` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events):
+对于瓦片图层位于其他图层的顶部所带来的问题就是，瓦片图层将捕获点击和触摸事件。如果用户在地图上点击的话，浏览器将默认用户点击的是注记图层，而不是GeoJSON或者标注点。这个问题可以通过[CSS属性`pointer-events`](https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events)来解决：
 
 
     map.getPane('labels').style.pointerEvents = 'none';
 
 
-With the pane now ready, we can add the layers, paying attention to use the `pane` option on the labels tiles:
+现在分层已经准备好了，我们可以添加图层了，注意在注记图层中使用的`pane`选项：
 
 
     var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
@@ -125,8 +122,8 @@ With the pane now ready, we can add the layers, paying attention to use the `pan
     }).addTo(map);
 
     var geojson = L.geoJson(GeoJsonData, geoJsonOptions).addTo(map);
-   
-Finally, add some interaction to each feature on the GeoJSON layer:
+
+最终，在GeoJSON图层的每个特征上添加一些交互：
 
     geojson.eachLayer(function (layer) {
         layer.bindPopup(layer.feature.properties.name);
@@ -135,7 +132,7 @@ Finally, add some interaction to each feature on the GeoJSON layer:
     map.fitBounds(geojson.getBounds());
 
 
-Now the [example map](map-panes-example.html) is complete!
+现在，这个[教程](map-panes-example.html)完成了！
 
 
 
