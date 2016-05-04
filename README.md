@@ -1,4 +1,4 @@
-### 注意：该项目所有内容均翻译自[Leaflet Github主页](https://github.com/Leaflet/Leaflet.git)，并添加和修改一些内容，如有侵权，请联系本人。
+### 注意：该项目所有内容均翻译自[Leaflet Github主页](https://github.com/Leaflet/Leaflet/tree/gh-pages)，并添加和修改一些内容，如有侵权，请联系本人。
 ------
 
 Leaflet官方网站：http://www.leafletjs.com
