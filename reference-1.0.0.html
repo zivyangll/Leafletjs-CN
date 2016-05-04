@@ -142,7 +142,7 @@ Leaflet 0.6版本的文档源码在<a href="https://github.com/Leaflet/Leaflet/a
 
 
 
-<pre><code class="lang-js">// initialize the map on the &quot;map&quot; div with a given center and zoom
+<pre><code class="lang-js">// 使用id为map的div容器初始化地图，同时指定地图的中心点和缩放级别
 var map = L.map(&#39;map&#39;, {
  center: [51.505, -0.09],
  zoom: 13
@@ -170,13 +170,11 @@ var map = L.map(&#39;map&#39;, {
 	</thead><tbody>
 	<tr id='map-l-map'>
 		<td><code><b>L.map</b>(<nobr>&lt;String&gt;</nobr> <i>id</i>, <nobr>&lt;Map options&gt;</nobr> <i>options?</i>)</nobr></code></td>
-		<td>Instantiates a map object given the DOM ID of a <code>&lt;div&gt;</code> element
-and optionally an object literal with <code>Map options</code>.</td>
+		<td>将地图部署在给定ID的DIV容器中，并设置地图的选项。</td>
 	</tr>
 	<tr id='map-l-map'>
 		<td><code><b>L.map</b>(<nobr>&lt;HTMLElement&gt;</nobr> <i>el</i>, <nobr>&lt;Map options&gt;</nobr> <i>options?</i>)</nobr></code></td>
-		<td>Instantiates a map object given an instance of a <code>&lt;div&gt;</code> HTML element
-and optionally an object literal with <code>Map options</code>.</td>
+		<td>将地图部署在给定的div标签实例中，并设置地图的选项。</td>
 	</tr>
 </tbody></table>
 
@@ -203,8 +201,8 @@ and optionally an object literal with <code>Map options</code>.</td>
 		<td><code><b>preferCanvas</b></code></td>
 		<td><code>Boolean</code>
 		<td><code>false</code></td>
-		<td>Whether <a href="#path"><code>Path</code></a>s should be rendered on a <a href="#canvas"><code>Canvas</code></a> renderer.
-By default, all <code>Path</code>s are rendered in a <a href="#svg"><code>SVG</code></a> renderer.</td>
+		<td>判断<a href="#path"><code>Path</code></a>是否应该使用<a href="#canvas"><code>Canvas</code></a>进行渲染。
+默认情况下，所有的<code>Path</code>都通过SVG渲染。</td>
 	</tr>
 </tbody></table>
 
@@ -225,13 +223,13 @@ By default, all <code>Path</code>s are rendered in a <a href="#svg"><code>SVG</c
 		<td><code><b>attributionControl</b></code></td>
 		<td><code>Boolean</code>
 		<td><code>true</code></td>
-		<td>Whether a <a href="#control-attribution">attribution control</a> is added to the map by default.</td>
+		<td>默认情况下，是否<a href="#control-attribution">attribution control</a>应该被添加到地图中。</td>
 	</tr>
 	<tr id='map-zoomcontrol'>
 		<td><code><b>zoomControl</b></code></td>
 		<td><code>Boolean</code>
 		<td><code>true</code></td>
-		<td>Whether a <a href="#control-zoom">zoom control</a> is added to the map by default.</td>
+		<td>默认情况下，<a href="#control-zoom">zoom control</a>是否应该添加到地图中。</td>
 	</tr>
 </tbody></table>
 
@@ -252,7 +250,7 @@ By default, all <code>Path</code>s are rendered in a <a href="#svg"><code>SVG</c
 		<td><code><b>closePopupOnClick</b></code></td>
 		<td><code>Boolean</code>
 		<td><code>true</code></td>
-		<td>Set it to <code>false</code> if you don&#39;t want popups to close when user clicks the map.</td>
+		<td>如果你不想用户点击地图时关闭弹出框，请将它设置为false。</td>
 	</tr>
 	<tr id='map-zoomsnap'>
 		<td><code><b>zoomSnap</b></code></td>
